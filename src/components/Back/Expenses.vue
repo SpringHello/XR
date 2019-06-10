@@ -1048,18 +1048,19 @@
     </Modal>
 
     <!-- 订单管理支付确认弹窗 -->
-    <Modal v-model="showModal.payAffirm" :scrollable="true" :width="640" :mask-closable="false">
+    <Modal v-model="showModal.payAffirm" :scrollable="true" :width="500" :mask-closable="false" class="paymodal">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">支付确认</span>
+        <span class="universal-modal-title">批量支付</span>
       </p>
-      <div class="universal-modal-content-flex">
-        <p class="cash-coupon-p">总支付金额：<span> ¥{{ payForm.paymentAmount }}</span></p>
-        <p class="cash-coupon-p">现金券支付金额：<span>¥{{payForm.cashCoupon }}</span></p>
-        <p class="cash-coupon-p">现金券余额：<span>¥{{ payForm.cashCouponBalance}}</span></p>
-        <p class="cash-coupon-p" v-if="voucher <= parseInt(payForm.paymentAmount)">现金支付金额：<span>¥{{ (payForm.paymentAmount - voucher).toFixed(2)}}</span></p>
+      <div class="paycent">
+        <p>总支付金额：<span> ¥{{ payForm.paymentAmount }}</span></p>
+        <p style="margin-top:10px;">现金券支付金额：<span>¥{{payForm.cashCoupon }}</span></p>
+        <p style="margin-top:10px;">现金券余额：<span>¥{{ payForm.cashCouponBalance}}</span></p>
       </div>
+       <p class="paypthree" v-if="voucher <= parseInt(payForm.paymentAmount)">待支付金额<span>¥{{ (payForm.paymentAmount - voucher).toFixed(2)}}</span></p>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="payOk">确认支付</Button>
+        <Button @click="showModal.payAffirm=false">取消</Button>
+        <Button type="primary" @click="payOk" style="margin-left:10px;">去支付</Button>
       </div>
     </Modal>
     <!-- 未实名弹窗 -->
@@ -3685,6 +3686,8 @@
                   //this.searchOrderByType()
                   this.getOrder('1')
                   this.init()
+                  this.AllMpneylength='0'
+                  this.AllMpney='0.0'
                 }
                 else{
                   this.$Message.error({
@@ -3945,6 +3948,7 @@
                  }
               })
             })
+            console.log(arr)
           this.ordernumS=arr.toString(',')
           this.AllMpneylength=arr.length
           this.totalCost = Math.round(cost * 100) / 100
@@ -5852,6 +5856,37 @@
     }
     .row:last-of-type {
       margin-bottom: 0
+    }
+  }
+  .paymodal{
+    .paycent{
+      width:460px;
+      height:117px;
+      background:rgba(66,151,242,0.08);
+      border-radius:4px;
+      border:1px solid rgba(66,151,242,1);
+      padding:20px;
+      > p{
+        font-size:14px;
+        color:rgba(102,102,102,1);
+        > span{
+          font-family:MicrosoftYaHei-Bold;
+          font-weight:bold;
+          color:rgba(51,51,51,1);
+        }
+      }
+    }
+    .paypthree{
+      font-size:14px;
+      color:rgba(51,51,51,1);
+      margin-top:20px;
+      > span{
+        font-size:18px;
+        font-family:MicrosoftYaHei-Bold;
+        font-weight:bold;
+        color:rgba(255,98,75,1);
+        margin-left: 10px;
+      }
     }
   }
 </style>

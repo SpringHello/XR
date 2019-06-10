@@ -219,7 +219,7 @@
                 </div>
                 <div v-if="info.length !== 0">
                   <div v-for="cpu in info[0].kernelList" :key="cpu.value" class="zoneItem"
-                       :class="{zoneSelect:vmConfig.kernel==cpu.value}"
+                       :class="{zoneSelect:vmConfig.kernel==cpu.value,zoneDisabled: cpu.value >= 8 && system.systemId == 'f5d3534c-44e9-42fe-b5a4-d68533f68d5e' }"
                        @click="changeKernel(cpu)">{{cpu.name}}
                   </div>
                 </div>
@@ -233,8 +233,8 @@
                 </div>
                 <div>
                   <div v-for="item in RAMList" :key="item.value" class="zoneItem"
-                       :class="{zoneSelect:vmConfig.RAM==item.value}"
-                       @click="vmConfig.RAM=item.value">{{item.name}}
+                       :class="{zoneSelect:vmConfig.RAM==item.value,zoneDisabled: item.value > 4 && system.systemId == 'f5d3534c-44e9-42fe-b5a4-d68533f68d5e'}"
+                       @click="changeRAM(item.value)">{{item.name}}
                   </div>
                 </div>
               </div>
@@ -1275,9 +1275,20 @@
       // cpu核心数切换
       // 切换核心数
       changeKernel(cpu) {
+        // window2003 镜像内存不能选择4g+
+        if(cpu.value >= 8 && this.system.systemId == 'f5d3534c-44e9-42fe-b5a4-d68533f68d5e'){
+          return 
+        }
         this.vmConfig.kernel = cpu.value
         /*this.RAMList = cpu.RAMList
          this.vmConfig.RAM = this.RAMList[0].value*/
+      },
+      // 切换内存数
+      changeRAM(value){
+        if(value > 4 && this.system.systemId == 'f5d3534c-44e9-42fe-b5a4-d68533f68d5e'){
+          return 
+        }
+        this.vmConfig.RAM = value
       },
       // 查询自定义主机价格
       queryCustomVM() {
@@ -1574,7 +1585,15 @@
           //this.passwordForm.thirdDegree = false
           //this.passwordForm.thirdError = true
         }
-      }
+      },
+      'system.systemId': {
+        handler: function (value) {
+          if(value == 'f5d3534c-44e9-42fe-b5a4-d68533f68d5e'){
+            this.vmConfig.kernel = '4'
+          }
+        },
+        deep: true
+      },
     }
   }
 </script>

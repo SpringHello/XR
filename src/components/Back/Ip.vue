@@ -314,7 +314,7 @@
       </p>
       <div class="modal-content-s">
         <div>
-          <p class="lh24">您正将<span> {{ publicipOnDelete}} </span>等ip移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。
+          <p class="lh24">您正将<span> {{ publicipOnDelete}} </span>移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。
           </p>
         </div>
       </div>
@@ -1900,7 +1900,7 @@
                    return item.publicip
                  })*/
           let ips = this.select[0].publicip // 由于弹窗出现长度错误，只显示1个id地址
-          return ips + ''
+          return ips ? ips + '等IP' : '异常IP（-）'
         } else {
           return ''
         }

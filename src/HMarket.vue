@@ -358,13 +358,13 @@
   </div>
 </template>
 
-<script>
+<script scoped>
   import axios from '@/util/axiosInterceptor'
   import $store from './vuex'
   import {mapState} from 'vuex'
   import debounce from 'throttle-debounce/debounce'
   import '@/assets/iconfont/frontend/iconfont.css'
-  import '@/assets/css/market.css'
+  //import '@/assets/css/market.css'
   import '@/assets/iconfont/frontend/iconfont.js'
   import uuid from 'uuid'
   import regExp from './util/regExp'
