@@ -3941,7 +3941,6 @@
               return item.ordernumber
             })
           })
-          console.log(arr)
           this.ordernumS=arr.toString(',')
           this.AllMpneylength=arr.length
           this.totalCost = Math.round(cost * 100) / 100
