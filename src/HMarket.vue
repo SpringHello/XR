@@ -1,13 +1,5 @@
 <template>
-  <div id="front">
-    <!-- <div class="app-hint" ref="hint" @click="$router.push('/ruicloud/AnniversaryActive')">
-      <div class="center">
-        <div class="countdown" v-if="hintShow">
-          <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
-        </div>
-      </div>
-      <img v-if="hintShow" @click="closeHeadHint" src="./assets/img/app/hint-icon1.png"/>
-    </div> -->
+  <div id="fronts">
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
@@ -23,8 +15,11 @@
                   </a>
                   <a v-else-if="item.title=='关于我们'" :href="item.path" rel="nofollow"><span>{{item.title}}</span>
                   </a>
-                  <router-link v-else :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
-                                                                               v-if="item.title=='活动中心'"></sup></span>
+                  <router-link v-else :to="item.path">
+                    <span>
+                      {{item.title}}
+                      <sup class="circle-dot-a" v-if="item.title=='活动中心'"></sup>
+                    </span>
                   </router-link>
                 </div>
                 <div class="menu-dropdown-list">
@@ -33,8 +28,8 @@
                       <div v-if="item.content" class="column" :class="{info:index1 == 4,zx:index1 == 3}" style="padding:21px 0;">
                         <div v-for="(prod,index) in item.content" :key="index">
                           <div>
-                            <h2 v-if="index1 == 3||index1 == 4" class="info" @click="openInfo(prod.path)" :class="{mark:item.title=='新闻动态'}">{{prod.prod}}</h2>
-                            <h2 v-else :class="{mark:item.title=='新闻动态'}">{{prod.prod}}</h2>
+                            <h2 v-if="index1 == 3||index1 == 4" class="info" @click="openInfo(prod.path)">{{prod.prod}}</h2>
+                            <h2 v-else>{{prod.prod}}</h2>
                             <div v-for="(i,index) in prod.prodItem" style="line-height: normal" :key="index">
                               <a :href="i.path" v-if="i.path==''">{{i.title}}</a>
                               <a :href="i.path" v-else>{{i.title}}</a>
@@ -68,7 +63,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a href="https://zschj.xrcloud.net/overview" rel="nofollow"><span>控制台</span>
+                  <a href="https://www.xrcloud.net/overview" rel="nofollow"><span>控制台</span>
                   </a>
                 </div>
               </div>
@@ -83,16 +78,15 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                   <a href="#" rel="nofollow"><span @click="login">登录</span></a>
-                  <!--<a href="https://zschj.xrcloud.net/login" rel="nofollow"><span>登录</span>-->
-                  <!--</a>-->
+                  <a href="https://www.xrcloud.net/login" rel="nofollow"><span>登录</span>
+                  </a>
                 </div>
               </div>
             </li>
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <a href="https://zschj.xrcloud.net/register" rel="nofollow"><span>注册</span>
+                  <a href="https://www.xrcloud.net/register" rel="nofollow"><span>注册</span>
                   </a>
                 </div>
               </div>
@@ -114,7 +108,7 @@
                 </div>
               </div>
             </li>
-            <li @mouseenter="ME(1,$event)">
+            <li @mouseenter="ME(5,$event)">
               <Dropdown @on-click="go">
                 <a href="javascript:void(0)" style="position:relative">
                   {{ userInfo?userInfo.realname:''}}
@@ -221,7 +215,7 @@
               <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">{{item.preparation}}</a>
             </li>
             <li>
-              <a href="http://www.beian.miit.gov.cn" rel="nofollow" target="_blank"
+              <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922" rel="nofollow" target="_blank"
               >
                 <img src="./assets/img/app/record.png" alt="京公网安备">{{item.desc}}
               </a>
@@ -261,11 +255,6 @@
             </div>
               </div>
             </div>
-          </div>
-            <div class="wrapper">
-            <div style="padding:0 20px;cursor:pointer" @click="linkService">
-            <span class="title">在线客服&nbsp&nbsp&nbsp<img style="vertical-align: bottom;" src="./assets/img/app/kefu-icon.png" /></span>
-              </div>
           </div>
           <div class="wrapper" v-if="xiaoshouInfo.length>0">
             <div>
@@ -307,20 +296,20 @@
           </div>
           <div class="wrapper">
             <div>
-            <span class="title">咨询热线 <span>400-0505-565</span></span>
+            <span class="title">咨询热线 400-0505-565</span>
               </div>
           </div>
         </div>
       </span>
-      <span class="phone" @click="getOrderType" @mouseenter="PME" @mouseleave="PML">
-        <div ref="phoneE" style="overflow: hidden;bottom:5px;">
-          <div class="wrapper">
-            <div>
-            <span class="title">投诉与建议</span>
-              </div>
-          </div>
-        </div>
-      </span>
+      <!--<Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
+      <span class="service"><a
+        :href="kfURL"
+        target="_blank"></a></span>
+      </Poptip>-->
+      <!--      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left" style="height:48px;">
+              <span class="phone"></span>
+            </Poptip>-->
+      <span class="phone" @click="getOrderType"></span>
       <div>
         <BackTop :bottom="161" :right="50" :duration="300" :height="1000" style="position: unset">
           <span class="topLink"></span>
@@ -375,10 +364,10 @@
   import {mapState} from 'vuex'
   import debounce from 'throttle-debounce/debounce'
   import '@/assets/iconfont/frontend/iconfont.css'
+  import '@/assets/css/market.css'
   import '@/assets/iconfont/frontend/iconfont.js'
   import uuid from 'uuid'
   import regExp from './util/regExp'
-
   export default {
     name: 'app',
     data() {
@@ -391,88 +380,6 @@
         }
       };
       return {
-        /*titleItem: [
-         {
-         title: '活动中心',
-         path: '/ruicloud/ActiveCenter'
-         },
-         {
-         title: '首页',
-         path: '/ruicloud/home'
-         },
-         {
-         title: '产品',
-         path: '',
-         content: [
-         {
-         prod: '云计算',
-         prodItem: [
-         {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/ruicloud/Pecs'},
-         {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost'},
-         {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss'},
-         {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/ruicloud/Pgpu'},
-         {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
-         {title: '弹性伸缩（敬请期待）', desc: '高可用、可视化、低成本', path: ''}
-         ]
-         },
-         {
-         prod: '云网络',
-         prodItem: [
-         {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/ruicloud/Pvpc'},
-         {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/ruicloud/Peip'},
-         {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/ruicloud/Pbalance'},
-         {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/ruicloud/Pnat'},
-         {title: '虚拟专网VPN', desc: '跨VPC连接', path: '/ruicloud/Pvirvpn'},
-         {title: 'CDN（敬请期待）', desc: '节点丰富、安全易用', path: ''}
-         ]
-         },
-         {
-         prod: '云存储',
-         prodItem: [
-         {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/ruicloud/Pdisk'},
-         {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/ruicloud/Pbackupdisk'},
-         {title: '对象存储', desc: '安全稳定，海量便捷', path: '/ruicloud/PobjStorage'}
-         ]
-         },
-         {
-         prod: '云数据库',
-         prodItem: [
-         {
-         title: '云数据库',
-         desc: 'MySQL、PostgreSQL、mongoDB、Redis',
-         path: '/ruicloud/PdataBase'
-         },
-         ]
-         },
-         {
-         prod: '云安全',
-         prodItem: [
-         {title: '防火墙', desc: '自定义规则、协议、端口', path: '/ruicloud/Pfirewall'},
-         {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ruicloud/Pddos'}
-         ]
-         },
-         {
-         prod: '云运维',
-         prodItem: [
-         {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/ruicloud/Pmonitor'},
-         {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: ''}
-         ]
-         }
-         ]
-         },
-         {
-         title: '文档',
-         path: '/ruicloud/document'
-         },
-         {
-         title: '资讯',
-         path: '/ruicloud/article/1'
-         },
-         {
-         title: '关于我们',
-         path: '/about'
-         }
-         ], // banner item*/
         titleItem: [
           {
             title: '活动中心',
@@ -483,150 +390,150 @@
             path: '/'
           },
           {
-            title: '产品',
-            path: '',
-            content: [
-              {
-                prod: '云计算',
-                prodItem: [
-                  {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/ecs/'},
-                  {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/mirrorservice/'},
-                  {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ecssnapshot/'},
-                  {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/gpu/'},
-                  {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/elasticscalable/'},
-                  {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: '/'},
-                ]
-              },
-              {
-                prod: '云网络',
-                prodItem: [
-                  {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/vpc/'},
-                  {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/elasticip/'},
-                  {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/loadbalancing/'},
-                  {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/natgateway/'},
-                  {title: '虚拟专网VPN', desc: '跨VPC连接', path: '/vpn/'},
-                  {title: 'CDN（敬请期待）', desc: '节点丰富、安全易用', path: '/'}
-                ]
-              },
-              {
-                prod: '云存储',
-                prodItem: [
-                  {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/disk/'},
-                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/diskbackup/'},
-                  {title: '对象存储', desc: '安全稳定，海量便捷', path: '/objectstorage/'}
-                ]
-              },
-              {
-                prod: '云数据库',
-                prodItem: [
-                  {
-                    title: '云数据库',
-                    desc: 'MySQL、PostgreSQL、mongoDB、Redis',
-                    path: '/database/'
-                  },
-                ],
-                subProd: [
-                  {
-                    prod: '域名与备案',
-                    prodItem: [
-                      {
-                        title: '域名注册',
-                        desc: '自定义域名注册、查询',
-                        path: '/domain/'
-                      },
-                      {
-                        title: '域名备案',
-                        desc: '高效贴心的域名备案服务',
-                        path: '/icp/'
-                      },
-                    ]
-                  },
-                ]
-              },
-              {
-                prod: '云安全',
-                prodItem: [
-                  {title: '防火墙', desc: '自定义规则、协议、端口', path: '/firewall/'},
-                  //{title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ddos/'},
-                  {
-                    title: 'SSL证书',
-                    desc: '网站可信身份认证与安全数据传输',
-                    path: '/ssl/'
-                  },
-                ],
-                subProd: [
-                  {
-                    prod: '云运维',
-                    prodItem: [
-                      {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/monitor/'},
-                      {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: '/'}
-                    ]
-                  }
-                ]
-              },
-            ]
+            title: '成为服务供应商',
+            path: '/provider'
           },
-          // {
-          //   title: '云市场',
-          //   path: '/market'
-          // }, 
-          {
-            title: '帮助文档',
-            path: 'https://www.xrcloud.net/support/products/',
-            content: [
-              {
-                prod: '产品文档',
-                path: 'https://www.xrcloud.net/support/products/'
-              },
-              {
-                prod: '常见问题',
-                path: 'https://www.xrcloud.net/support/asks/'
-              },
-              {
-                prod: '快速入门',
-                path: 'https://www.xrcloud.net/support/quick/'
-              }
-            ]
-          },
-          {
-            title: '新闻动态',
-            path: 'https://www.xrcloud.net/news/',
-            content: [
-              {
-                prod: '云服务器',
-                path: 'https://www.xrcloud.net/news/yunfuwuqi/'
-              },
-              {
-                prod: '云计算',
-                path: 'https://www.xrcloud.net/news/yunjisuan/'
-              },
-              {
-                prod: '云安全',
-                path: 'https://www.xrcloud.net/news/yunanquan/'
-              },
-              {
-                prod: '香港云服务器 ',
-                path: 'https://www.xrcloud.net/news/xianggangyunfuwuqi/'
-              },
-              {
-                prod: '虚拟主机',
-                path: 'https://www.xrcloud.net/news/xunizhuji/'
-              },
-              {
-                prod: '服务器虚拟化',
-                path: 'https://www.xrcloud.net/news/fuwuqixunihua/'
-              },
-
-              {
-                prod: '域名交流',
-                path: 'https://www.xrcloud.net/news/yumingjiaoliu/'
-              }
-            ]
-          },
-          {
-            title: '关于我们',
-            path: 'https://www.xrcloud.net/about/'
-          }
+/* //           {
+//             title: '产品',
+//             path: '',
+//             content: [
+//               {
+//                 prod: '云计算',
+//                 prodItem: [
+//                   {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/ecs/'},
+//                   {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/mirrorservice/'},
+//                   {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ecssnapshot/'},
+//                   {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/gpu/'},
+//                   {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/elasticscalable/'},
+//                   {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: '/'},
+//                 ]
+//               },
+//               {
+//                 prod: '云网络',
+//                 prodItem: [
+//                   {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/vpc/'},
+//                   {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/elasticip/'},
+//                   {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/loadbalancing/'},
+//                   {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/natgateway/'},
+//                   {title: '虚拟专网VPN', desc: '跨VPC连接', path: '/vpn/'},
+//                   {title: 'CDN（敬请期待）', desc: '节点丰富、安全易用', path: '/'}
+//                 ]
+//               },
+//               {
+//                 prod: '云存储',
+//                 prodItem: [
+//                   {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/disk/'},
+//                   {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/diskbackup/'},
+//                   {title: '对象存储', desc: '安全稳定，海量便捷', path: '/objectstorage/'}
+//                 ]
+//               },
+//               {
+//                 prod: '云数据库',
+//                 prodItem: [
+//                   {
+//                     title: '云数据库',
+//                     desc: 'MySQL、PostgreSQL、mongoDB、Redis',
+//                     path: '/database/'
+//                   },
+//                 ],
+//                 subProd: [
+//                   {
+//                     prod: '域名与备案',
+//                     prodItem: [
+//                       {
+//                         title: '域名注册',
+//                         desc: '自定义域名注册、查询',
+//                         path: '/domain/'
+//                       },
+//                       {
+//                         title: '域名备案',
+//                         desc: '高效贴心的域名备案服务',
+//                         path: '/icp/'
+//                       },
+//                     ]
+//                   },
+//                 ]
+//               },
+//               {
+//                 prod: '云安全',
+//                 prodItem: [
+//                   {title: '防火墙', desc: '自定义规则、协议、端口', path: '/firewall/'},
+//                   //{title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ddos/'},
+//                   {
+//                     title: 'SSL证书',
+//                     desc: '网站可信身份认证与安全数据传输',
+//                     path: '/ssl/'
+//                   },
+//                 ],
+//                 subProd: [
+//                   {
+//                     prod: '云运维',
+//                     prodItem: [
+//                       {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/monitor/'},
+//                       {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: '/'}
+//                     ]
+//                   }
+//                 ]
+//               },
+//             ]
+//           },
+//           {
+//             title: '帮助文档',
+//             path: 'https://www.xrcloud.net/support/products/',
+//             content: [
+//               {
+//                 prod: '产品文档',
+//                 path: 'https://www.xrcloud.net/support/products/'
+//               },
+//               {
+//                 prod: '常见问题',
+//                 path: 'https://www.xrcloud.net/support/asks/'
+//               },
+//               {
+//                 prod: '快速入门',
+//                 path: 'https://www.xrcloud.net/support/quick/'
+//               }
+//             ]
+//           },
+//           {
+//             title: '新闻动态',
+//             path: 'https://www.xrcloud.net/news/',
+//             content: [
+//               {
+//                 prod: '云服务器',
+//                 path: 'https://www.xrcloud.net/news/yunfuwuqi/'
+//               },
+//               {
+//                 prod: '云计算',
+//                 path: 'https://www.xrcloud.net/news/yunjisuan/'
+//               },
+//               {
+//                 prod: '云安全',
+//                 path: 'https://www.xrcloud.net/news/yunanquan/'
+//               },
+//               {
+//                 prod: '香港云服务器 ',
+//                 path: 'https://www.xrcloud.net/news/xianggangyunfuwuqi/'
+//               },
+//               {
+//                 prod: '虚拟主机',
+//                 path: 'https://www.xrcloud.net/news/xunizhuji/'
+//               },
+//               {
+//                 prod: '服务器虚拟化',
+//                 path: 'https://www.xrcloud.net/news/fuwuqixunihua/'
+//               },
+// 
+//               {
+//                 prod: '域名交流',
+//                 path: 'https://www.xrcloud.net/news/yumingjiaoliu/'
+//               }
+//             ]
+//           },
+//           {
+//             title: '关于我们',
+//             path: 'https://www.xrcloud.net/about/'
+//           } */
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
         lineStyle: {
@@ -759,10 +666,11 @@
       //   this.$refs.hint.style.height = '80px'
       // }
       //this.setTime()
+
       let params = {
         batchNumber: window.UUID,
         type: '1',
-        pageURL:window.location.href ,
+        pageURL: window.location.href
       }
       // 获取入口信息
       axios.post('information/webReachableRecord.do', params)
@@ -798,21 +706,17 @@
       // 获取用户信息
       var userInfo = axios.get('user/GetUserInfo.do', {params: {t: new Date().getTime()}})
       // 获取zone信息
-      var zoneList = axios.get('information/zone.do', {params: {t: new Date().getTime(),buy: '1'}})
+      var zoneList = axios.get('information/zone.do', {params: {t: new Date().getTime()}})
       Promise.all([userInfo, zoneList]).then(values => {
         if (values[0].data.status == 1 && values[0].status == 200) {
-          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result, authInfoPersion: values[0].data.authInfo_persion})
+          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
           localStorage.setItem('realname', values[0].data.result.realname)
         }
         if (values[1].data.status == 1 && values[1].status == 200) {
           $store.commit('setZoneList', values[1].data.result)
         }
       },)
-      this.$http.get('user/getKfAdd.do',{
-        params:{
-          type:''
-        }
-      }).then(response => {
+      this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })
       // QQ客服在线情况
@@ -833,9 +737,6 @@
       })
     },
     methods: {
-       login () {
-        this.$router.push('login')
-      },
       /* li mouseenter事件 重新设置line样式 */
       ME: debounce(200, function (index, event) {
         if (index == -1) {
@@ -849,16 +750,10 @@
         }
       }),
       QME() {
-        this.$refs.qq.style.width = '200px'
+        this.$refs.qq.style.width = '231px'
       },
       QML() {
         this.$refs.qq.style.width = '0px'
-      },
-      PME() {
-        this.$refs.phoneE.style.width = '95px'
-      },
-      PML() {
-        this.$refs.phoneE.style.width = '0px'
       },
       go(path) {
         if (path == 'exit') {
@@ -923,7 +818,6 @@
         window.open(href)
       },
       getOrderType(){
-        this.complaintForm.step = 1
         this.$http.get('order/orderType.do',{params:{
           gid: '5'
         }}).then(res=>{
@@ -971,13 +865,6 @@
                 })
           }
         })
-      },
-      linkService(){
-        if(this.userInfo){
-          window.open(`https://im.xrcloud.net/im/text/0Jck1w.html?companyId=${this.userInfo.companyid}`)
-        } else{
-          window.open('https://im.xrcloud.net/im/text/0Jck1w.html')
-        }       
       }
     },
     computed: mapState({
@@ -1004,7 +891,7 @@
 </script>
 
 <style rel="stylesheet/less" lang="less">
-  #front {
+  #fronts {
     .app-hint {
       height: 0;
       background: url("./assets/img/app/hint-banner.png") center no-repeat, linear-gradient(to right, #FF4439, #FF1569);
@@ -1078,7 +965,8 @@
           }
         }
         .operate-pdding {
-          //padding-left: 90px;
+          padding-left: 0;
+          padding-right: 200px;
         }
         .operate {
           > ul {
@@ -1188,10 +1076,6 @@
                           // }
 
                         }
-                        .mark {
-                          border-bottom: none;
-                          padding-bottom: 0;
-                        }
                         h2 {
                           font-size: 18px;
                           color: #FFFFFF;
@@ -1291,9 +1175,9 @@
       }
       #foot-footer {
         .footer-top {
-          // height: 340px;
+          height: 340px;
           background-color: #434343;
-          padding: 46px 0 20px 0;
+          padding-top: 46px;
           .description {
             width: 1200px;
             margin: 0px auto;
@@ -1468,7 +1352,7 @@
           top: unset;
           transition: width .3s;
           box-shadow:0px 2px 16px -5px rgba(130,130,130,0.5);
-          border-radius:10px;
+          border-radius:15px;
         }
         & > a {
           width: 100%;
@@ -1476,11 +1360,11 @@
           display: block;
         }
         .wrapper {
-          width: 200px;
+          width: 231px;
           right: 0px;
           top: 0px;
           > div {
-            padding: 20px 20px 10px;
+            padding: 10px;
             > span {
               font-size: 12px;
               font-family: MicrosoftYaHei;
@@ -1489,10 +1373,6 @@
               &.title {
                 color: rgba(29, 23, 22, 1);
                 font-size: 14px;
-                span{
-                  font-family:MicrosoftYaHei-Bold;
-                  font-weight:bold;
-                }
               }
             }
             .info-wrapper {
@@ -1541,7 +1421,6 @@
         display: block;
         padding: 10px;
         background: #FFF;
-        position: relative;
         background-repeat: no-repeat;
         background-position: center;
         background-image: url('./assets/img/app/phone.png');
@@ -1553,41 +1432,15 @@
           background-position: center;
           background-image: url('./assets/img/app/phone-hover.png');
         }*/
-        > div {
-          position: absolute;
-          width: 0px;
-          background-color: #ffffff;
-          right: 55px;
-          top: unset;
-          transition: width .3s;
-          box-shadow:0px 2px 16px -5px rgba(130,130,130,0.5);
-          border-radius:15px;
-        }
-        .wrapper {
-          width: 95px;
-          right: 0px;
-          top: 0px;
-          > div {
-            padding: 10px ;
-            > span {
-              font-size: 12px;
-              font-family: MicrosoftYaHei;
-              color: rgba(102, 102, 102, 1);
-              line-height: 16px;
-              &.title {
-                color:#333333;
-                font-size: 14px;
-              }
-            }
-          }
-        }
       }
       .topLink {
         display: block;
         width: 48px;
         height: 48px;
-        box-shadow: 0px 2px 16px -5px rgba(255,98,75,1);
-        background: #FF624B url(./assets/img/app/top.png) no-repeat center;
+        background-image: url('./assets/img/app/top.png');
+        &:hover {
+          background: #2A99F2 url('./assets/img/app/top-hover.png') no-repeat center;
+        }
       }
     }
     .backtop {
