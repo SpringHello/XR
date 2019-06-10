@@ -1900,7 +1900,7 @@
                    return item.publicip
                  })*/
           let ips = this.select[0].publicip // 由于弹窗出现长度错误，只显示1个id地址
-          return ips + ''
+          return ips ? ips + '' : ''
         } else {
           return ''
         }
