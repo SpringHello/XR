@@ -335,7 +335,6 @@
           </Tab-pane>
           <Tab-pane label="我的卡券" name="myCard">
             <div class="searchCard">
-              
               <p>
                 <span class="spana">适用产品：</span>
                 <RadioGroup v-model="ApplicableProducts" type="button" class="rideo" @on-change="ProductChange">
@@ -1518,7 +1517,7 @@
             },
             {
                 title: '流水号',
-                key: 'trnobuy',
+                key: 'trnoRecent',
                 width: 180
             }
         ],
@@ -3928,27 +3927,21 @@
         this.orderNumber = []
         this.totalCost = 0
         var arr = []
-        this.orderNumber = selection
+        this.orderNumber = this.data5.filter(item=>{
+          return item._checked==true
+        })
         if (this.orderNumber.length != 0) {
           // this.costSeen = true
           var cost = 0
-            this.orderNumber.forEach((item,index) => {
-              arr.push(item.ordernumber)
-              if (item && item.paymentstatus == 0) {
-                cost += Number.parseFloat(item.cost)
-              }
-              this.data5.forEach((itemd,indexd) => {
-                 if(item.ordercreatetime==itemd.ordercreatetime){
-                   if(item.ordernumber==itemd.ordernumber){
-
-                   }
-                   else{
-                     arr.push(itemd.ordernumber)
-                   }
-                 }
-              })
+          this.orderNumber.forEach((item,index) => {
+            if (item && item.paymentstatus == 0) {
+              cost += Number.parseFloat(item.cost)
+            }
+            arr = this.orderNumber.map(item=>{
+              return item.ordernumber
             })
-            console.log(arr)
+          })
+          console.log(arr)
           this.ordernumS=arr.toString(',')
           this.AllMpneylength=arr.length
           this.totalCost = Math.round(cost * 100) / 100
