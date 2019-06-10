@@ -386,7 +386,7 @@
               <div class="invoice-records" v-if="invoiceList">
                 <Button type="primary" style="margin-right: 10px" @click="toAppllyInvoice()">申请发票</Button>
                 <Button @click="toAdressee()">发票信息&收件人</Button>
-                <Table highlight-row :columns="invoiceColumns" :data="invoiceTabledata" style="margin-top: 10px"></Table>
+                <Table highlight-row :columns="invoiceColumns" :data="invoiceTabledata" @on-sort-change="SortInvoice" style="margin-top: 10px"></Table>
                 <div style="margin: 10px;overflow: hidden">
                   <div style="float: right;">
                     <Page :total="invoiceTotal" :current="invoicePage" :page-size="invoicePageSize" @on-change="invoicePageChange"></Page>
@@ -2482,7 +2482,7 @@
             title: '发票申请时间',
             key: 'createtime',
             align: 'left',
-            sortable: true,
+            sortable: 'custom',
           },
           {
             title: '发票种类',
@@ -2552,9 +2552,10 @@
           }
         ],
         invoiceTabledata: [],
+        invoiceTimeOrder: '',
         invoiceTotal: 12,
         invoicePage: 1,
-        invoicePageSize: 7,
+        invoicePageSize: 3,
         name,
         ordertotal: 0,
         timeType: '',
@@ -3313,6 +3314,12 @@
       toAdressee() {
         this.$router.push('invoiceAddressee')
       },
+      SortInvoice(column) {
+        if(column.key=="createtime"){
+          this.invoiceTimeOrder = column.order
+          this.getInvoiceList()
+        }
+      },
       SortField(column){
         if(column.key=="cost"){
           this.TransactionAmountsort=column.order
@@ -4009,7 +4016,7 @@
           params: {
             page: this.invoicePage,
             pageSize: this.invoicePageSize,
-            timeOrder: ''
+            timeOrder: this.invoiceTimeOrder
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
