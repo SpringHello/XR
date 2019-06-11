@@ -52,7 +52,7 @@
                     <span @click="$router.push('/expenses')">订单管理</span>
 									</DropdownItem>
 									<DropdownItem name="myCard#expenses">
-                    <span @click="$router.push('/expenses')">折扣优惠</span>
+                    <span @click="$router.push('/expenses')">我的卡券</span>
 									</DropdownItem>
                   <DropdownItem name="applyInvoice#expenses">
                     <span @click="$router.push('/expenses')">发票管理</span>

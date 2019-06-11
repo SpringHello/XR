@@ -3148,7 +3148,7 @@
         //orderManage(订单管理) accountSummary(财务总览) myCard(我的卡劵) applyInvoice(发票管理) bills(账单)
         if(sessionStorage.getItem('expensesTab')){
           let tab = sessionStorage.getItem('expensesTab')
-          this.name = tab
+          this.paneStatus.expenses = tab
           this.changecard()
           sessionStorage.removeItem('expensesTab')
         }
@@ -3445,30 +3445,30 @@
         //this.changeOrder()
         if(value=='orderManage'){
           this.paymentStatusValue=''
-          this.name='orderManage'
+          this.paneStatus.expenses='orderManage'
           this.changecard()
         }
         else if(value=='orderManagepay'){
           this.paymentStatusValue='0'
-          this.name='orderManage'
+          this.paneStatus.expenses='orderManage'
           this.changecard()
         }
         else if(value=='myCard'){
           this.VoucherStatus=''
-          this.name='myCard'
+          this.paneStatus.expenses='myCard'
           this.changecard()
         }
         else if(value=='myCardnot'){
           this.VoucherStatus='0'
-          this.name='myCard'
+          this.paneStatus.expenses='myCard'
           this.changecard()
         }
         else if(value=='invoicejmp'){
-          this.name='applyInvoice'
+          this.paneStatus.expenses='applyInvoice'
           this.changecard()
         }
         else if(value=='billjump'){
-          this.name='bills'
+          this.paneStatus.expenses='bills'
           this.changecard()
         }
       },
@@ -3494,7 +3494,8 @@
         this.activeIndex = null
       },
       changecard() {
-        switch (this.name) {
+        // console.log(this.paneStatus.expenses)
+        switch (this.paneStatus.expenses) {
           case 'orderManage':
             //this.searchOrderByType()
             this.getOrder('1')
@@ -4893,6 +4894,10 @@
     })
     ,
     watch: {
+      //从顶部点入选中tab,不调用接口的情况
+      paneStatus(val) {
+        this.changecard()
+      },
       dateRange() {
         this.search()
       },
