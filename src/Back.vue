@@ -39,7 +39,26 @@
 						  <router-link to="operationLog" :class="{active:pageInfo.path=='operationLog'}"><span>操作日志</span></router-link>
 						</li>
 						<li>
-						  <router-link to="expenses" :class="{active:pageInfo.path=='expenses'}">费用</router-link>
+              <Dropdown @on-click="go">
+                <a href="javascript:void(0)" style="position:relative">费用</a>
+                <DropdownMenu slot="list">
+                  <DropdownItem name="accountSummary#expenses">
+                    <span @click="$router.push('/expenses')">财务总览</span>
+                  </DropdownItem>
+									<DropdownItem name="bills#expenses">
+                    <span @click="$router.push('/expenses')">账单</span>
+									</DropdownItem>
+									<DropdownItem name="orderManage#expenses">
+                    <span @click="$router.push('/expenses')">订单管理</span>
+									</DropdownItem>
+									<DropdownItem name="myCard#expenses">
+                    <span @click="$router.push('/expenses')">折扣优惠</span>
+									</DropdownItem>
+                  <DropdownItem name="applyInvoice#expenses">
+                    <span @click="$router.push('/expenses')">发票管理</span>
+									</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
 						</li>
 						
             <!-- <li>
@@ -54,16 +73,16 @@
                 </a>
                 <DropdownMenu slot="list">
                   <DropdownItem name="personalInfo#usercenter">
-                    <router-link to="/userCenter">个人信息</router-link>
+                    <span @click="$router.push('/userCenter')">个人信息</span>
                   </DropdownItem>
 									<DropdownItem name="remainder#usercenter">
-									  <router-link to="/userCenter">提醒设置</router-link>
+                    <span @click="$router.push('/userCenter')">提醒设置</span>
 									</DropdownItem>
 									<DropdownItem name="certification#usercenter">
-									  <router-link to="/userCenter">实名认证</router-link>
+                    <span @click="$router.push('/userCenter')">实名认证</span>
 									</DropdownItem>
 									<DropdownItem name="key#usercenter">
-									  <router-link to="/userCenter">Access Key</router-link>
+                    <span @click="$router.push('/userCenter')">Access Key</span>
 									</DropdownItem>
                   <!-- <DropdownItem name="expenses">
                     <router-link to="/expenses">费用中心</router-link>
@@ -312,7 +331,6 @@
   import '@/assets/iconfont/backend/iconfont.js'
   import '@/assets/iconfont/backend/iconfont.css'
   import regExp from './util/regExp'
-
   export default {
     name: 'back',
     data() {
@@ -611,6 +629,7 @@
         }
       },
       go(path) {
+        // console.log(path)
         if (path == 'exit') {
           this.exit()
           return
@@ -619,25 +638,27 @@
           this.pane(path)
 				  return
 				}
-        this.$router.push(path)
+        // this.$router.push(path)
       },
       pane(pane) {
         var paneStatue = {
           vpc: 'VPC',
           vpn: 'remote',
-          usercenter: 'personalInfo'
+          usercenter: 'personalInfo',
+          expenses: 'accountSummary'
         }
         let arr = pane.split('#')
         if (arr[1] == '虚拟专网VPN') {
           paneStatue.vpn = arr[0]
         } else if(arr[1] == 'usercenter') {
           paneStatue.usercenter = arr[0]
+        }else if(arr[1] == 'expenses') {
+          paneStatue.expenses = arr[0]
         }else {
           paneStatue.vpc = arr[0]
         }
         this.$store.commit('setPane', paneStatue)
       },
-			
       menuStyle(type) {
         if (this.$refs[type]) {
           var clientWidth = this.$refs[`${type}-sub`][0].clientWidth || this.$refs[`${type}-sub`][0].getBoundingClientRect().width
