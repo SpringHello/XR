@@ -51,17 +51,29 @@
                         <Icon type="arrow-down-b"></Icon>
                     </span>
                     <DropdownMenu slot="list">
-                        <div class="menu-item">
+                        <div class="menu-item" v-if="yearList.length > 0">
                            <ul>
-                                  <li v-for="(subItem,subIndex) in yearList" :key="(subIndex+2)*3" @click="yearClick(item,subItem,subIndex)" :class="{clickMenu:yearIndex == subIndex}">
+                                  <li v-for="(subItem,subIndex) in yearList" :key="(subIndex+2)*3" @click="yearClick(item,subItem,subIndex)">
                                      <div>
-                                         <p>{{subItem.year}}</p>
+                                         <p>
+                                             <img src="../../../assets/img/domain/i-check.jpg" alt="" v-if="subIndex == yearIndex">
+                                             <img src="../../../assets/img/domain/n-check.jpg" alt="" v-else>
+                                             {{subItem.year}}
+                                         </p>
                                          <p>注册价:<span>¥{{subItem.regPrice}}</span></p>
                                          <p>续费价:<span>¥{{subItem.renewalPrice}}</span></p>
                                      </div>
                                   </li>
                               </ul>
                            <button class="coures" @click="choosePrice(item)" v-show="item.status != 'yijia'">确认</button>
+                        </div>
+                        <div class="menu-item" v-else>
+                            <span class="nodadta">
+                                <Spin v-show="showFix" size='small'>
+                                    <Icon type="load-c" size=10 class="demo-spin-icon-load"></Icon>
+                                    <div>努力加载中</div>
+                                </Spin>
+                            </span>
                         </div>
                     </DropdownMenu>
                 </Dropdown>
@@ -141,9 +153,7 @@
         singles: [],
         Results: [],
         visible: 'visible', // 更多价格浮窗
-        yearList: [
-          {regPrice: "30.00", year: "1年", renewalPrice: "32.00"},
-        ],
+        yearList: [],
         yearValue: '',
         yearIndex: 'yearIndex', // 价格年限选择
         // 域名清单
@@ -194,21 +204,17 @@
 
       //展现更多Price
       getMore (name,index) {
-        if (this.$store.state.userInfo == null) {
-          this.$LR({
-            type: 'login'
-          })
-          return
-        }else {
-          axios.post('domain/getDomainAllPrice.do', {
-            domainName: name
-          }).then(res => {
-            if (res.status == 200 && res.data.status == 1) {
-              this.visible = index
-             this.yearList = res.data.data.results
-            }
-          })
-        }
+        this.visible = index
+        this.showFix = true
+        this.yearList = []
+        axios.post('domain/getDomainAllPrice.do', {
+          domainName: name
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.showFix = false
+            this.yearList = res.data.data.results
+          }
+        })
       },
 
       //更多价格选择
@@ -247,6 +253,7 @@
             if (res.status == 200 && res.data.status == 1) {
               this.buyLists.push (res.data.data.results)
               item.status = 'yijia'
+              this.yearIndex = 'yearIndex'
             }
           })
         }
@@ -629,38 +636,30 @@
                                 color:rgba(102,102,102,1);
                                 line-height:16px;
                                 &:first-of-type {
-                                    padding-left: 18px;
-                                    width: 20%;
-                                    color:rgba(51,51,51,1);
+                                    padding-left: 10px;
+                                    width: 22%;
+                                    img {
+                                        width: 14px;
+                                        height: 14px;
+                                        display: inline-block;
+                                        vertical-align: text-bottom;
+                                        margin-right: 3px;
+                                    }
                                 }
                                 &:nth-of-type(2) {
-                                    padding-left: 15px;
+                                    padding-left: 10px;
                                     width: 40%;
                                     border-left: 1px solid #E9E9E9;
                                     border-right: 1px solid #E9E9E9;
                                 }
                                 &:last-of-type {
-                                    padding-left: 15px;
-                                    width: 40%;
+                                    padding-left: 10px;
+                                    width: 38%;
                                 }
                                 span{
                                     color:#FF624B;
                                     font-size:12px;
                                     line-height:16px;
-                                }
-                            }
-                        }
-                    }
-                    .clickMenu {
-                        div {
-                            p {
-                                background:rgba(42,153,242,1);
-                                color:#FFFFFF;
-                                &:first-of-type {
-                                    color:#FFFFFF;
-                                }
-                                span {
-                                    color:#FFFFFF;
                                 }
                             }
                         }
@@ -677,6 +676,15 @@
                     font-size:12px;
                     color:rgba(255,255,255,1);
                     line-height:16px;
+                }
+                .nodadta {
+                    display: block;
+                    height: 214px;
+                    padding-top:80px;
+                    font-size:14px;
+                    font-weight:400;
+                    color: rgba(42, 153, 242, 1);
+                    line-height:20px;
                 }
             }
        }
