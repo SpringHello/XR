@@ -12,7 +12,7 @@
         </svg> -->
         <span class="title"
               style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">费用中心</span>
-        <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"
+        <Tabs v-model="paneStatus.expenses" type="card" :animated="false" @on-click="changecard"
               style="margin-top: 20px;min-height: 650px;padding-bottom:140px;">
           <Tab-pane label="财务总览" name="accountSummary">
             <div class="money">
@@ -1220,7 +1220,7 @@
           <div class="row" v-if="switchBill">
             <i class="lable">账单接收人</i>
             <Select v-model="selectLinkMan" style="width:280px;">
-              <Option :value="item.id" v-for="(item,index) in linkManData" :key="index">{{item.username}}</Option>
+              <Option :value="item.email" v-for="(item,index) in linkManData" :key="index">{{item.username}}</Option>
             </Select>
             <Poptip trigger="hover" placement="top" style="margin-left:8px;color:#2B99F2;font-size:18px;">
                 <Icon type="ios-help-outline"></Icon>
@@ -1243,6 +1243,7 @@
   import axios from 'axios'
   import reg from '../../util/regExp'
   import $store from '../../vuex'
+  import {mapState} from 'vuex'
   export default {
     data() {
       const validaRegisteredPhone = (rule, value, callback) => {
@@ -1261,13 +1262,6 @@
         } else {
           callback()
         }
-      }
-      //当前打开的pane页
-      let name = this.$route.query.pane || 'accountSummary'
-      if (name == 'orderManage') {
-        var order_type = 'notpay'
-        /*this.searchOrderByType()
-         this.init()*/
       }
       // 默认上一个月的一号到月底的日期（table默认日期）
       let now = new Date()
@@ -2560,7 +2554,6 @@
         invoiceTotal: 12,
         invoicePage: 1,
         invoicePageSize: 7,
-        name,
         ordertotal: 0,
         timeType: '',
         timeTypeList: [
@@ -2788,7 +2781,6 @@
             label: '退款中订单'
           }
         ],
-        order_type,
         optionsOrder: {
           shortcuts: [
             {
@@ -3135,7 +3127,7 @@
     created() {
       this.getUserVipLevel()
         this.getBalance()
-        this.changeOrder()
+        // this.changeOrder()
         this.showMoneyByMonth()
         this.search()
         this.getTicketNumber()
@@ -3247,7 +3239,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.linkManData = response.data.result
             if(this.linkManData.length!=0) {
-              this.selectLinkMan = response.data.result[0].id
+              this.selectLinkMan = response.data.result[0].email
             }
           }
         })
@@ -4807,7 +4799,8 @@
         })
       },
     },
-    computed: {
+    computed: mapState({
+      paneStatus: state => state.paneStatus,
       payDisabled() {
         if (this.orderNumber.some(checkPaymentStatus) || this.orderNumber.length === 0) {
           return true
@@ -4893,7 +4886,7 @@
         let currentMonth = this.valueBill.split('-')[1]
         return (currentYear <= year && currentMonth<month) || (currentYear <= year && currentMonth == month && day >= 3)?true:false
       }
-    }
+    })
     ,
     watch: {
       dateRange() {
