@@ -31,7 +31,8 @@ const store = new Vuex.Store({
     paneStatus: {
       vpc: 'VPC',
       vpn: 'remote',
-      usercenter: 'personalInfo'
+      usercenter: 'personalInfo',
+      expenses: 'accountSummary'
     },
     accessKey: null,
     qq: {}
