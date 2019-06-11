@@ -272,7 +272,7 @@
           if (response.data.status === 1 && response.status == 200) {
             this.zfbNum = response.data.serialNum
             localStorage.setItem('serialNum', this.zfbNum)
-            window.open(null,'alipay').location.href = `https://www.xrcloud.net/zfb/alipaypage.do?serialNum=${this.zfbNum}&route=resultNew`
+            window.open(null,'alipay').location.href = `https://zschj.xrcloud.net/zfb/alipaypage.do?serialNum=${this.zfbNum}&route=resultNew`
             this.showModal.paymentCofirm = true
           } else {
             this.$message.info({
