@@ -3133,6 +3133,7 @@
         this.getTicketNumber()
         this.invoiceLimit()
         this.changecard()
+        this.DefaultBalance()
       if (sessionStorage.getItem('beVip')) {
         this.getVipList()
         sessionStorage.removeItem('beVip')
@@ -3156,6 +3157,9 @@
         if(index == 3) {
           this.getExportTable()
         }
+      },
+      DefaultBalance(){
+        this.BalanceRepval=this.$store.state.userInfo.balanceAlarmAmount
       },
       initOverview() {
         let now = new Date()
@@ -3426,6 +3430,7 @@
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.userInfoUpdate()
+              //this.BalanceRepval=this.$store.state.userInfo.balanceAlarmAmount
               this.showModal.SetBalanceWarning=false
             }
             else{
@@ -3933,7 +3938,6 @@
               return item.ordernumber
             })
           })
-          console.log(arr)
           this.ordernumS=arr.toString(',')
           this.AllMpneylength=arr.length
           this.totalCost = Math.round(cost * 100) / 100
