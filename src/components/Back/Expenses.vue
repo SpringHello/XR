@@ -118,9 +118,9 @@
             </div>
           </Tab-pane>
 					<Tab-pane label="账单" name="bills" class="bill">
-            <ButtonGroup>
-                <Button v-for="(item,index) in billTabs" :key="index" :class="{'select-tab':billBtnSelected == index}" @click="billChangeTabs(index)">{{item}}</Button>
-            </ButtonGroup>
+            <RadioGroup v-model="billBtnSelected" type="button" @on-change="billChangeTabs">
+              <Radio v-for="(item,index) in billTabs" :key="index" :label="index">{{item}}</Radio>
+            </RadioGroup>
             <div v-if="billBtnSelected==0" class="bill-overview">
               <div class="overview">
                 <div class="flex-vertical-center content-header">
@@ -216,9 +216,13 @@
             </div>
             <div v-if="billBtnSelected==1">
               <div class="expenses_condition">
-                <span style="margin-right: 10px">按交易时间</span>
-                <Date-picker v-model="timeResourceVal" format="yyyy-MM-dd" type="daterange" placement="bottom-start" :clearable="false"
-                        placeholder="选择日期" style="width: 231px;position: relative;bottom: 12px" @on-change="dataChangeResource"></Date-picker>
+                <span>按交易时间</span>
+                <Row style="display: inline-block;margin-left: 10px">
+                  <Col span="12">
+                    <Date-picker v-model="timeResourceVal" format="yyyy-MM-dd" type="daterange" placement="bottom-start" :clearable="false"
+                                placeholder="选择日期" style="width: 231px;" @on-change="dataChangeResource"></Date-picker>
+                  </Col>
+                </Row>
                 <span style="margin-left: 20px">按交易金额</span>
                 <Input-number :min="0" v-model="minCashResource"
                               style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
@@ -331,7 +335,6 @@
           </Tab-pane>
           <Tab-pane label="我的卡券" name="myCard">
             <div class="searchCard">
-              
               <p>
                 <span class="spana">适用产品：</span>
                 <RadioGroup v-model="ApplicableProducts" type="button" class="rideo" @on-change="ProductChange">
@@ -1514,7 +1517,7 @@
             },
             {
                 title: '流水号',
-                key: 'trnobuy',
+                key: 'trnoRecent',
                 width: 180
             }
         ],
@@ -2556,7 +2559,7 @@
         invoiceTimeOrder: '',
         invoiceTotal: 12,
         invoicePage: 1,
-        invoicePageSize: 3,
+        invoicePageSize: 7,
         name,
         ordertotal: 0,
         timeType: '',
@@ -3158,7 +3161,6 @@
         }
       },
       billChangeTabs(index) {
-        this.billBtnSelected=index
         if(index == 3) {
           this.getExportTable()
         }
@@ -3925,27 +3927,20 @@
         this.orderNumber = []
         this.totalCost = 0
         var arr = []
-        this.orderNumber = selection
+        this.orderNumber = this.data5.filter(item=>{
+          return item._checked==true
+        })
         if (this.orderNumber.length != 0) {
           // this.costSeen = true
           var cost = 0
-            this.orderNumber.forEach((item,index) => {
-              arr.push(item.ordernumber)
-              if (item && item.paymentstatus == 0) {
-                cost += Number.parseFloat(item.cost)
-              }
-              this.data5.forEach((itemd,indexd) => {
-                 if(item.ordercreatetime==itemd.ordercreatetime){
-                   if(item.ordernumber==itemd.ordernumber){
-
-                   }
-                   else{
-                     arr.push(itemd.ordernumber)
-                   }
-                 }
-              })
+          this.orderNumber.forEach((item,index) => {
+            if (item && item.paymentstatus == 0) {
+              cost += Number.parseFloat(item.cost)
+            }
+            arr = this.orderNumber.map(item=>{
+              return item.ordernumber
             })
-            console.log(arr)
+          })
           this.ordernumS=arr.toString(',')
           this.AllMpneylength=arr.length
           this.totalCost = Math.round(cost * 100) / 100
@@ -5629,11 +5624,6 @@
   }
   .bill {
     color: #333;
-    .select-tab {
-      color:rgba(42,153,242,1);
-      border:1px solid rgba(42,153,242,1);
-      z-index: 2;
-    }
     .monthly-tabs {
       display: flex;
       li {
