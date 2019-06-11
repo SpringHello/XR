@@ -324,7 +324,8 @@
                   <Button type="primary" @click="getOrder('1')">查询</Button>
                 </span>
               </p>
-              <Table :columns="columns5" :data="data5" @on-sort-change="SortField" @on-selection-change="select" @on-select="selectone" @on-select-cancel="selectonechange" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
+              <!-- @on-select-all="selectall" -->
+              <Table :columns="columns5" :data="data5" @on-sort-change="SortField" @on-selection-change="select" @on-select="selectone" @on-select-cancel="selectonechange"  no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
               <div style="margin: 10px;">
                 <div style="float: right;overflow: hidden">
                   <Page :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
@@ -760,7 +761,7 @@
       </p>
     </Modal>
     <!-- 优惠券兑换modal -->
-    <Modal v-model="showModal.exchangeCard" width="600" :scrollable="true" :mask-closable="false">
+    <Modal v-model="showModal.exchangeCard" width="600" :scrollable="true" :mask-closable="false" :closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">兑换优惠券</span>
       </p>
@@ -778,7 +779,8 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="exchange">兑换</Button>
+        <Button @click="closeexchangeCard">取消</Button>
+        <Button type="primary" @click="exchange" style="margin-left:10px;">兑换</Button>
       </div>
     </Modal>
 
@@ -3928,6 +3930,43 @@
           }
         })
       },
+      selectall(selection){
+        console.log(selection)
+        this.orderNumber = []
+        this.totalCost = 0
+        var arr = []
+        this.orderNumber = selection
+        if (this.orderNumber.length != 0) {
+          // this.costSeen = true
+          var cost = 0
+          this.orderNumber.forEach((item,index) => {
+            if (item && item.paymentstatus == 0) {
+              cost += Number.parseFloat(item.cost)
+            }
+            arr = this.orderNumber.map(item=>{
+              return item.ordernumber
+            })
+          })
+          this.ordernumS=arr.toString(',')
+          this.AllMpneylength=arr.length
+          console.log(arr.length)
+          this.totalCost = Math.round(cost * 100) / 100
+          this.actualDelivery = this.totalCost
+          this.InquiryPrice()
+          if (this.totalCost == 0) {
+            // this.costSeen = false
+          }
+          this.cardSelection = null
+          this.activeIndex = null
+        } else {
+          // this.costSeen = false
+          this.AllMpney='0.0'
+          this.AllMpneylength='0'
+        }
+        console.log(this.orderNumber)
+        console.log( this.AllMpneylength)
+        
+      },
       select(selection) {
         this.orderNumber = []
         this.totalCost = 0
@@ -4393,6 +4432,11 @@
             this.exchangeCardCodeError = true
           }
         })
+      },
+      closeexchangeCard(){
+        this.showModal.exchangeCard=false
+        this.exchangeCardCode=''
+        this.exchangeCardMessage=''
       },
       // 提现操作
       withdraw() {
