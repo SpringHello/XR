@@ -1128,6 +1128,7 @@
             }).then(res => {
               if (res.status == 200 && res.data.status == 1) {
                 this.showModal.getSuccessModal = true
+                this.toggleZone(this.configGroup[this.index1].zoneId)
               } else {
                 this.$message.info({
                   content: res.data.message
@@ -1223,7 +1224,17 @@
         } else if (this.payWay == 'balancePay') {
           this.otherPayWay = ''
         }
-      }
+      },
+      toggleZone(zoneId) {
+        // 切换默认区域
+        axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
+        })
+        for (var zone of this.$store.state.zoneList) {
+          if (zone.zoneid == zoneId) {
+            $store.commit('setZone', zone);
+          }
+        }
+      },
     },
     computed: {
       disabled() {
