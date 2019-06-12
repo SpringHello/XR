@@ -3983,6 +3983,9 @@
           if(row.complexorderbatch&&row.complexorderbatch==item.complexorderbatch){
             item._checked=true
             this.data5.splice(index, 1, item)
+          } else if(!row.complexorderbatch&&row.ordernumber==item.ordernumber){
+            item._checked=true
+            this.data5.splice(index, 1, item)
           }
         })
       },
@@ -4010,6 +4013,7 @@
           this.orderNumber = this.data5.filter(item=>{
             return item._checked==true
           })
+          console.log(this.orderNumber)
           this.AllMpneylength=this.orderNumber.length
           // this.costSeen = true
           var cost = 0
@@ -4023,6 +4027,7 @@
           })
           // console.log(arr)
           this.ordernumS=arr.toString(',')
+          console.log(this.ordernumS)
           this.totalCost = Math.round(cost * 100) / 100
           this.actualDelivery = this.totalCost
           this.InquiryPrice()
