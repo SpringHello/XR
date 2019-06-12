@@ -620,9 +620,21 @@
               }
             })
           } else {
-            this.$message.info({
-              content: '创建订单失败，请稍候再试'
-            })
+            let len = responseList.length
+            if(len > 0){
+              for(let i = 0; i<len;i++){
+                if(responseList[i].data.status != 1 ){
+                  this.$message.info({
+                    content: responseList[i].data.message
+                  })
+                  break
+                }
+              }
+            } else{
+              this.$message.info({
+                content: '网络出现问题，请稍候再试'
+              })
+            }
           }
         })
 
