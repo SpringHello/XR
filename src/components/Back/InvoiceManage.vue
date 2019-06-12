@@ -218,11 +218,10 @@
                 >获取验证码</Button>
                 <Button disabled style="margin-left:10px;" v-else>{{count+'分'}}</Button>
               </FormItem>
-              <FormItem label="区域">
+              <FormItem label="区域" v-if="addresseeLength==0">
                 <Select
                   v-model="formInvoiceDate.province"
                   style="width:93px;"
-                  :disabled="addresseeLength!=0"
                   @on-change="changeProvince"
                 >
                   <Option v-for="item in area" :value="item.name" :key="item.name">{{item.name}}</Option>
@@ -230,7 +229,6 @@
                 <Select
                   v-model="formInvoiceDate.city"
                   style="width:93px;"
-                  :disabled="addresseeLength!=0"
                   @on-change="changeArea"
                 >
                   <Option v-for="item in areaList" :value="item.name" :key="item.name">{{item.name}}</Option>
@@ -238,10 +236,26 @@
                 <Select
                   v-model="formInvoiceDate.district"
                   style="width:93px;"
-                  :disabled="addresseeLength!=0"
                 >
                   <Option v-for="item in countyList" :value="item" :key="item">{{item}}</Option>
                 </Select>
+              </FormItem>
+              <FormItem label="区域" v-else>
+                <Input
+                  style="width:93px;"
+                  :disabled="true"
+                  v-model="formInvoiceDate.province"
+                ></Input>
+                <Input
+                  style="width:93px;"
+                  :disabled="true"
+                  v-model="formInvoiceDate.city"
+                ></Input>
+                <Input
+                  style="width:93px;"
+                  :disabled="true"
+                  v-model="formInvoiceDate.district"
+                ></Input>
               </FormItem>
               <FormItem label="详细地址" prop="address">
                 <Input
