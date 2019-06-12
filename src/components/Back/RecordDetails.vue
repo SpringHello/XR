@@ -1928,7 +1928,7 @@ export default {
                 }
               });
             } else {
-              this.isAllUpate = false;
+              this.isAllUpate = true;
             }
           } else {
             this.$Loading.finish();
