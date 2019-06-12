@@ -4219,6 +4219,10 @@
       }
     }),
     watch: {
+      //从顶部导航点击进入tab页,调用接口
+      paneStatus(val) {
+        this.tabSwitching(val.usercenter)
+      },
       '$store.state.zone': {
         handler: function () {
           this.getResourceAllocation()

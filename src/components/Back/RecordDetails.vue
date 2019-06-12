@@ -262,12 +262,12 @@
                     style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
-                  <p>{{hostUnitList.urgentLinkMan}}</p>
+                  <p>{{hostUnitList.urgentlinkman}}</p>
                   <div v-if="urgentLinkManHide" class="text_block"><span style="color:red">信息有误</span>
                     <span style="color:#2a99f2;cursor:pointer;" @click=" urgentLinkMan = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
-                  <p>{{hostUnitList.webLinkMainRelationship}}</p>
+                  <p>{{hostUnitList.weblinkmainrelationship}}</p>
                   <div v-if="webLinkMainRelationshipHide" class="text_block"><span style="color:red">信息有误</span>
                     <span style="color:#2a99f2;cursor:pointer;" @click=" webLinkMainRelationship = true">重新输入</span></div>
                 </li>
@@ -295,7 +295,7 @@
                     <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
-                  <p>{{hostUnitList.urgentLinkManNumber}}</p>
+                  <p>{{hostUnitList.urgentlinkmannumber}}</p>
                   <div v-if="urgentLinkManNumberHide" class="text_block"><span style="color:red">信息有误</span>
                     <span style="color:#2a99f2;cursor:pointer;" @click="urgentLinkManNumber = true">重新输入</span></div>
                 </li>
@@ -970,20 +970,20 @@
           <p style="margin:10px">电子邮箱地址</p>
           <Input type="text" v-model="updateHostUnitList.email"></Input>
         </FormItem>
-        <FormItem prop="urgentLinkMan">
+        <FormItem prop="urgentlinkman">
           <p style="margin:10px">紧急联系人姓名</p>
-          <Input type="text" v-model="updateHostUnitList.urgentLinkMan"></Input>
+          <Input type="text" v-model="updateHostUnitList.urgentlinkman"></Input>
         </FormItem>
-        <FormItem prop="urgentLinkManNumber">
+        <FormItem prop="urgentlinkmannumber">
           <p style="margin:10px">紧急联系人电话</p>
-          <Input type="text" v-model="updateHostUnitList.urgentLinkManNumber"></Input>
+          <Input type="text" v-model="updateHostUnitList.urgentlinkmannumber"></Input>
         </FormItem>
-        <FormItem prop="webLinkMainRelationship">
+        <FormItem prop="webLinkmainrelationship">
           <p style="margin:10px">与网站负责人关系</p>
           <Select v-model="relationship">
             <Option v-for="item in webRelationshipList" :value="item.value" :key="item.value">{{ item.value }}</Option>
           </Select>
-          <Input type="text" v-if='relationship == "其他"' v-model="updateHostUnitList.webLinkMainRelationship"></Input>
+          <Input type="text" v-if='relationship == "其他"' v-model="updateHostUnitList.weblinkmainrelationship"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -1486,13 +1486,13 @@ export default {
             trigger: "blur"
           }
         ],
-        urgentLinkMan:[
+        urgentlinkman:[
           { required: true, message: "请输入紧急联系人姓名",trigger: "blur"}
         ],
-        webLinkMainRelationship:[
+        weblinkmainrelationship:[
           { required: true, message:'与紧急联系人关系不能为空', trigger: "blur"}
         ],
-        urgentLinkManNumber:[
+        urgentlinkmannumber:[
            { required: true, validator:validPhoneNumber, trigger: "blur"}
         ]
       },
@@ -1928,7 +1928,7 @@ export default {
                 }
               });
             } else {
-              this.isAllUpate = true;
+              this.isAllUpate = false;
             }
           } else {
             this.$Loading.finish();
@@ -2141,7 +2141,7 @@ export default {
                     ? (this.webIsp = false)
                     : name == "address" ? (this.addressModal = false) : "";
                     if(this.relationship != '其他'){
-                      this.updateHostUnitList.webLinkMainRelationship == this.relationship;
+                      this.updateHostUnitList.weblinkmainrelationship == this.relationship;
                     }
           this.hostUnitList = JSON.parse(
             JSON.stringify(this.updateHostUnitList)
@@ -2214,9 +2214,9 @@ export default {
         backgroundPhone: this.hostUnitList.mark4,
         mainrecordnumber:this.hostUnitList.mainrecordnumber == undefined ?'':this.hostUnitList.mainrecordnumber,
         icprecordpassword:this.hostUnitList.icprecordpassword,
-        urgentLinkManNumber:this.hostUnitList.urgentLinkManNumber,
-        webLinkMainRelationship:this.hostUnitList.webLinkMainRelationship,
-        urgentLinkMan:this.hostUnitList.urgentLinkMan
+        urgentLinkManNumber:this.hostUnitList.urgentlinkmannumber,
+        webLinkMainRelationship:this.hostUnitList.weblinkmainrelationship,
+        urgentLinkMan:this.hostUnitList.urgentlinkman
       };
       for(let i in web){
         if(web[i] == ''){
@@ -2255,7 +2255,7 @@ export default {
           this.$router.push({ path: "BRecords" });
           this.$Message.success("修改成功");
         } else {
-          this.$message.info('修改失败');
+          this.$Message.info('修改失败');
         }
       });
     }

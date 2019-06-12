@@ -125,6 +125,7 @@
             <RadioGroup v-model="billBtnSelected" type="button" @on-change="billChangeTabs">
               <Radio v-for="(item,index) in billTabs" :key="index" :label="index">{{item}}</Radio>
             </RadioGroup>
+            <!-- 账单概览 -->
             <div v-if="billBtnSelected==0" class="bill-overview">
               <div class="overview">
                 <div class="flex-vertical-center content-header">
@@ -218,6 +219,7 @@
                 </div>
               </div>
             </div>
+            <!-- 资源详情 -->
             <div v-if="billBtnSelected==1">
               <div class="expenses_condition">
                 <span>按交易时间</span>
@@ -251,6 +253,7 @@
                 </div>
               </div>
             </div>
+            <!-- 流水详单 -->
             <div v-if="billBtnSelected==2">
               <div class="expenses_condition">
                 <span>按交易时间</span>
@@ -286,6 +289,7 @@
                 </div>
               </div>
             </div>
+            <!-- 导出记录 -->
             <div v-if="billBtnSelected==3" style="padding-top:20px">
               <Table highlight-row :columns="columnsExport" :data="exportTable"></Table>
                 <div style="margin: 10px;overflow: hidden">
@@ -385,7 +389,7 @@
             <div class="invoice-list">
               <div class="alert-warning">
                 <p>1.您选择的增值税专票金额不能小于1000元，请累计之后一并申请。</p>
-                <p>2.开票时间为每月10-25日，在申请期限内的发票申请将在三个工作日内寄出，25号之后的发票申请将在下月10号以后寄出。</p>
+                <p>2.开票时间为每月10-20日，在申请期限内的发票申请将在当月20-25号内寄出，20号之后的发票申请将在下月20号以后寄出。</p>
               </div>
               <div class="invoice-money">
                 <p>实际可开金额发票：<span>￥{{ invoice }}</span></p>
@@ -1225,12 +1229,15 @@
           <div class="row" v-if="switchBill">
             <span style="color:#B2B2B2">开启账单自动发送之后，将在每月3号自动产生上月账单并发送至账单接收人</span>
           </div>
-          <div class="row" v-if="switchBill">
-            <i class="lable">账单接收人</i>
-            <Select v-model="selectLinkMan" style="width:280px;">
-              <Option :value="item.email" v-for="(item,index) in linkManData" :key="index">{{item.username}}</Option>
-            </Select>
-            <Poptip trigger="hover" placement="top" style="margin-left:8px;color:#2B99F2;font-size:18px;">
+          <div class="row universal-modal-label-14px hide-star-symbol" v-if="switchBill">
+            <Form ref="formLinkman" :model="formLinkman" :rules="ruleLinkman" :inline="true" :label-width="94">
+                <FormItem label="账单接收人" prop="selectLinkMan">
+                    <Select v-model="formLinkman.selectLinkMan" style="width:280px;">
+                      <Option :value="item.email" v-for="(item,index) in linkManData" :key="index">{{item.email}}</Option>
+                    </Select>
+                </FormItem>
+            </Form>
+            <Poptip trigger="hover" placement="top" style="margin-top:4px;color:#2B99F2;font-size:18px;">
                 <Icon type="ios-help-outline"></Icon>
                 <div class="api" slot="content" style="width:145px;white-space: normal;line-height:16px;">若您需要将账单发送至其他联系人，可以通过操作
                   <span style="color:#FF881C;line-height:16px">个人中心-提现管理-添加联系人</span>，添加您需要的联系人。
@@ -1241,7 +1248,8 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.billExport = false">取消</Button>
-        <Button type="primary" @click="billExportAuto_ok()">确认</Button>
+        <Button type="primary" @click="billExportAuto_ok('formLinkman')" v-if="switchBill">确认</Button>
+        <Button type="primary" @click="showModal.billExport = false" v-else>确认</Button>
       </p>
     </Modal>
   </div>
@@ -1289,7 +1297,14 @@
         ordernumS:'',
         switchBill: false,
         linkManData: [],
-        selectLinkMan: '',
+        formLinkman:{
+          selectLinkMan: ''
+        },
+        ruleLinkman: {
+          selectLinkMan: [
+              { required: true, message: '请选择账单接收人', trigger: 'change' }
+          ],
+        },
         valueBill: '2019-03',
         defaultMonth: '',
         monthFormat: '',
@@ -1520,7 +1535,7 @@
             },
             {
                 title: '流水号',
-                key: 'trnoRecent',
+                key: 'trnorecent',
                 width: 180
             }
         ],
@@ -3257,10 +3272,9 @@
         var url = `user/getcontacts.do`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.linkManData = response.data.result
-            if(this.linkManData.length!=0) {
-              this.selectLinkMan = response.data.result[0].email
-            }
+            this.linkManData = response.data.result.filter(item=> {
+              return item.email
+            })
           }
         })
       },
@@ -3291,23 +3305,24 @@
           }
         })
       },
-      billExportAuto_ok() {
-        axios.get('nVersionUser/modifyBillReceiver.do',{
-          params: {
-            status: this.switchBill?1:0,
-            billSendUser: this.selectLinkMan
-          }
-        }).then(response=> {
-          if(response.status == 200&&response.data.status == 1) {
-            if(this.switchBill) {
-              this.$Message.success('账单自动生成设置成功')
-            } else {
-              this.$Message.info('账单自动生成取消成功')
+      billExportAuto_ok(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+              axios.get('nVersionUser/modifyBillReceiver.do',{
+                params: {
+                  status: this.switchBill?1:0,
+                  billSendUser: this.formLinkman.selectLinkMan
+                }
+              }).then(response=> {
+                if(response.status == 200&&response.data.status == 1) {
+                  this.$Message.success('账单自动生成设置成功')
+                  this.showModal.billExport = false
+                } else {
+                  this.$Message.error(response.data.message)
+                }
+              })
             }
-          } else {
-            this.$Message.error(response.data.message)
-          }
-        })
+          })
       },
       billExportType() {
         axios.get('nVersionUser/getConsumptionSummaryExportUrl.do',{
@@ -4953,7 +4968,7 @@
     })
     ,
     watch: {
-      //从顶部点入选中tab,不调用接口的情况
+      //从顶部导航点击进入tab页,调用接口
       paneStatus(val) {
         this.changecard()
       },
