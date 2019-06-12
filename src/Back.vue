@@ -38,9 +38,9 @@
 						<li>
 						  <router-link to="operationLog" :class="{active:pageInfo.path=='operationLog'}"><span>操作日志</span></router-link>
 						</li>
-						<li>
+						<li class="nav-dropdown">
               <Dropdown @on-click="go">
-                <a href="javascript:void(0)" style="position:relative">费用</a>
+                <router-link to="expenses" class="dropdown-a" :class="{active:pageInfo.path=='expenses'}"><span>费用</span></router-link>
                 <DropdownMenu slot="list">
                   <DropdownItem name="accountSummary#expenses">
                     <span @click="$router.push('/expenses')">财务总览</span>
@@ -64,13 +64,13 @@
             <!-- <li>
               <router-link to="recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></router-link>
             </li> -->
-            <li>
+            <li class="nav-dropdown">
               <Dropdown @on-click="go">
-                <a href="javascript:void(0)" style="position:relative">
-                  {{userInfo?userInfo.realname:''}}
-                  <!-- <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup> -->
-                  <Icon type="arrow-down-b"></Icon>
-                </a>
+                <router-link to="userCenter" class="dropdown-a" :class="{active:pageInfo.path=='userCenter'}">
+                  <span>{{userInfo?userInfo.realname:''}}</span>
+                <Icon type="arrow-down-b"></Icon>
+                </router-link>
+                <!-- <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup> -->
                 <DropdownMenu slot="list">
                   <DropdownItem name="personalInfo#usercenter">
                     <span @click="$router.push('/userCenter')">个人信息</span>
@@ -922,6 +922,11 @@
                   }
                 }
               }
+              .nav-dropdown {
+                .ivu-dropdown-item:hover span {
+                  color: #2A99F2
+                }
+              }
             }
             > li {
               height: 100%;
@@ -929,11 +934,11 @@
               display: inline-block;
               color: #ffffff;
               font-size: 16px;
-              .ivu-dropdown {
-                margin-left: 0px;
-                padding-left: 12px;
-              }
-              > a {
+              // .ivu-dropdown {
+              //   margin-left: 0px;
+              //   padding-left: 12px;
+              // }
+              > a,.dropdown-a {
                 height: 100%;
                 display: inline-block;
                 padding: 0px 12px;
