@@ -87,13 +87,13 @@
             <Button disabled style="margin-left:10px;" v-else>{{count+'分'}}</Button>
           </FormItem>
           <FormItem label="区域">
-            <Select v-model="formReceipt.province" style="width:93px;" @on-change="changeProvince">
+            <Select v-model="formReceipt.province" style="width:93px;" :placeholder="provinceCover" @on-change="changeProvince">
               <Option v-for="item in area" :value="item.name" :key="item.name">{{item.name}}</Option>
             </Select>
-            <Select v-model="formReceipt.city" style="width:93px;" @on-change="changeArea">
+            <Select v-model="formReceipt.city" style="width:93px;" :placeholder="cityCover" @on-change="changeArea">
               <Option v-for="item in areaList" :value="item.name" :key="item.name">{{item.name}}</Option>
             </Select>
-            <Select v-model="formReceipt.district" style="width:93px;">
+            <Select v-model="formReceipt.district" :placeholder="districtCover" style="width:93px;">
               <Option v-for="item in countyList" :value="item" :key="item">{{item}}</Option>
             </Select>
           </FormItem>
@@ -439,6 +439,9 @@ export default {
       ],
       invoiceList: [
       ],
+      provinceCover: '',
+      cityCover: '',
+      districtCover: '',
       columnsAddressee: [
         {
           title: "收件人",
@@ -478,6 +481,12 @@ export default {
                     click: () => {
                       this.$refs['formReceipt'].resetFields();
                       this.formReceipt = JSON.parse(JSON.stringify(params.row));
+                      this.formReceipt.province = ''
+                      this.formReceipt.city = ''
+                      this.formReceipt.district = ''
+                      this.provinceCover = params.row.province
+                      this.cityCover = params.row.city
+                      this.districtCover = params.row.district
                       this.formReceipt.code = '';
                       this.addresseeTitleModal = '修改';
                       this.showModal.receiptInfoAdd = true;
@@ -648,7 +657,9 @@ export default {
     receiptInfoAdd_open (name) {
       this.$refs[name].resetFields()
       this.addresseeTitleModal = '新增'
-      // this.formReceipt = {}
+      this.formReceipt.province = '北京市'
+      this.changeProvince('北京市')
+      this.changeArea('北京市')
       this.showModal.receiptInfoAdd = true
     },
     invoiceInfoAdd_open (name) {
@@ -736,9 +747,9 @@ export default {
           let params = {
             recipient: this.formReceipt.recipient,
             phone: this.formReceipt.phone,
-            province: this.formReceipt.province,
-            city: this.formReceipt.city,
-            district: this.formReceipt.district,
+            province: this.formReceipt.province?this.formReceipt.province:this.provinceCover,
+            city: this.formReceipt.city?this.formReceipt.city:this.cityCover,
+            district: this.formReceipt.district?this.formReceipt.district:this.districtCover,
             address: this.formReceipt.address,
             smsCode: this.formReceipt.code
           }
