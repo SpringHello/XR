@@ -230,12 +230,12 @@
                   </Col>
                 </Row>
                 <span style="margin-left: 20px">按交易金额</span>
-                <Input-number :min="0" v-model="minCashResource"
+                <Input-number :min="0" v-model="minCashResource" :max="999999999"
                               style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
                 &nbsp;&nbsp;
                 <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
                 &nbsp;&nbsp;
-                <Input-number :min="0" v-model="maxCashResource"
+                <Input-number :min="0" v-model="maxCashResource" :max="999999999"
                               style="width: 116px;position: relative;bottom: 12px"></Input-number>
                 <Button type="primary" style="bottom: 12px; margin-left: 10px;position: relative" @click="getResourcesTable()">查询
                 </Button>
@@ -264,12 +264,12 @@
                   </Col>
                 </Row>
                 <span style="margin-left: 20px">按交易金额</span>
-                <Input-number :min="0" v-model="value1"
+                <Input-number :min="0" v-model="value1" :max="999999999"
                               style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
                 &nbsp;&nbsp;
                 <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
                 &nbsp;&nbsp;
-                <Input-number :min="0" v-model="value2"
+                <Input-number :min="0" v-model="value2" :max="999999999"
                               style="width: 116px;position: relative;bottom: 12px"></Input-number>
                 <Button type="primary" style="bottom: 12px; margin-left: 10px;position: relative" @click="search()">查询
                 </Button>
