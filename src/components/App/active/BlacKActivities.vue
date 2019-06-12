@@ -878,15 +878,17 @@
         <div class="overlay" @click="showModal.OpenMembership=false" v-if="showModal.OpenMembership">
           <div class="shipmodel" @click.stop="showModal.OpenMembership=true">
             <div class="header">
-              <img src="../../../assets/img/active/blackactive/Path.png" @click.stop="showModal.OpenMembership=false">
+              <img src="../../../assets/img/active/blackactive/close.png" @click.stop="showModal.OpenMembership=false" style="top:12px;right:12px;">
             </div>
             <div class="body">
-                
+                <p>开通成为新睿云会员</p>
+                <p><span></span><span> 尊享会员</span><span>折上折 </span> <span></span></p>
             </div>
             <div class="footer">
               <div class="wraper" @click.stop="OpenMembershipscroll" >
+                
               </div>
-              <div @click="$router.push('/activity/free/')" style="font-size:16px;color:rgba(255,255,255,1);position: absolute;bottom: 23px;text-align: center;width:100%;cursor: pointer;">新手豪礼，爆款服务器一年免费使用 →</div>
+              <div @click="$router.push('/activity/free/')" style="font-size:14px;color:rgba(255,255,255,1);position: absolute;bottom: 14px;text-align: center;width:100%;cursor: pointer;">新手豪礼，爆款服务器一年免费使用>> </div>
             </div>
           </div>
         </div>
@@ -2082,7 +2084,7 @@
         $('html, body').animate({scrollTop: val}, 300)
       },
       OpenMembershipscroll(){
-        $('html, body').animate({scrollTop: 4100}, 300)
+        $('html, body').animate({scrollTop: 3900}, 300)
         this.showModal.OpenMembership=false
       },
       init() {
@@ -5187,7 +5189,7 @@
   .shipmodel{
     background: url("../../../assets/img/active/blackactive/tanchuangall.png") no-repeat;
     width: 400px;
-    height: 489px;
+    height: 220px;
     position: relative;
     margin: 0 auto;
     top: 15%;
@@ -5200,13 +5202,52 @@
          cursor: pointer;
        }
     }
+    .body{
+      position: absolute;
+      top:40px;
+      padding: 0 83px;
+      > p:nth-child(1){
+        font-size:26px;
+        font-family:MicrosoftYaHei;
+        color:rgba(255,255,255,1);
+      }
+      > p:nth-child(2){
+        margin: 20px 0;
+        > span:nth-child(1){
+          width:20px;
+          height:1px;
+          background:linear-gradient(90deg,rgba(248,191,136,1) 0%,rgba(255,209,140,1) 36%,rgba(248,191,136,1) 100%);
+          float: left;
+          margin: 13px 6px 0 0;
+        }
+        > span:nth-child(2){
+          font-size:26px;
+          font-family:MicrosoftYaHei;
+          color:#FFFFFF;
+          float: left;
+        }
+        > span:nth-child(3){
+          font-size:26px;
+          font-family:MicrosoftYaHei;
+          color:#FFD17A;
+          float: left;
+        }
+        > span:nth-child(4){
+          width:20px;
+          height:1px;
+          float: left;
+          background:linear-gradient(90deg,rgba(248,191,136,1) 0%,rgba(255,209,140,1) 36%,rgba(248,191,136,1) 100%);
+          margin: 13px 0 0 6px;
+        }
+      }
+    }
     .wraper{
       background: url("../../../assets/img/active/blackactive/tanchuangbtn.png") no-repeat;
       width: 310px;
-      height: 80px;
+      height: 44px;
       position: absolute;
       bottom: 40px;
-      left: 45px;
+      left: 83px;
       cursor: pointer;
     }
   }
