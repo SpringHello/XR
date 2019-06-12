@@ -760,7 +760,7 @@
       </p>
     </Modal>
     <!-- 优惠券兑换modal -->
-    <Modal v-model="showModal.exchangeCard" width="600" :scrollable="true" :mask-closable="false">
+    <Modal v-model="showModal.exchangeCard" width="600" :scrollable="true" :mask-closable="false" :closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">兑换优惠券</span>
       </p>
@@ -778,7 +778,8 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="exchange">兑换</Button>
+        <Button @click="closeexchangeCard">取消</Button>
+        <Button type="primary" @click="exchange" style="margin-left:10px;">兑换</Button>
       </div>
     </Modal>
 
@@ -3924,33 +3925,31 @@
       selectAllchange(val) {
         if (val) {
           this.data5.forEach((item,index) => {
-              item._checked=true
               this.$set(this.data5[index],'_checked',true)
           })
         }
       },
       select(selection) {
         if (selection.length) {
-
-        
-        // console.log(selection)
-        this.orderNumber = []
-        this.totalCost = 0
-        var arr = []
-        this.orderNumber = this.data5.filter(item=>{
-          return item._checked==true
-        })
-        this.AllMpneylength=this.orderNumber.length
+          // console.log(selection)
+          this.orderNumber = []
+          this.totalCost = 0
+          var arr = []
+          this.orderNumber = this.data5.filter(item=>{
+            return item._checked==true
+          })
+          this.AllMpneylength=this.orderNumber.length
           // this.costSeen = true
           var cost = 0
           this.orderNumber.forEach((item,index) => {
             if (item && item.paymentstatus == 0) {
               cost += Number.parseFloat(item.cost)
             }
-            arr = this.orderNumber.map(item=>{
-              return item.ordernumber
-            })
           })
+          arr = this.orderNumber.map(item=>{
+            return item.ordernumber
+          })
+          // console.log(arr)
           this.ordernumS=arr.toString(',')
           this.totalCost = Math.round(cost * 100) / 100
           this.actualDelivery = this.totalCost
@@ -3961,6 +3960,10 @@
           this.cardSelection = null
           this.activeIndex = null
         } else {
+          this.data5.forEach((item,index) => {
+              this.$set(this.data5[index],'_checked',false)
+          })
+          this.ordernumS = ''
           this.AllMpney='0.0'
           this.AllMpneylength='0'
         }
@@ -4396,6 +4399,11 @@
             this.exchangeCardCodeError = true
           }
         })
+      },
+      closeexchangeCard(){
+        this.showModal.exchangeCard=false
+        this.exchangeCardCode=''
+        this.exchangeCardMessage=''
       },
       // 提现操作
       withdraw() {
