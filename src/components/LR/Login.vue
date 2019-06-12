@@ -701,6 +701,7 @@
         }
       }),
       loginByPassword() {
+        this.onLogin = true
         let url = 'user/login.do', params = {
           username: this.loginForm.loginName,
           password: this.loginForm.password,
@@ -718,6 +719,7 @@
               this.$router.push({path: this.from})
             }
           } else if (res.data.status === 2) {
+            this.onLogin = false
             if (this.loginForm.passwordErrorNum < 4) {
               this.loginForm.passwordErrorNum += 1
               this.loginForm.errorMsg = 'passwordMistake'
@@ -725,6 +727,7 @@
               this.loginForm.errorMsg = 'passwordMistakeTanto'
             }
           } else {
+            this.onLogin = false
             this.$message.info({
               content: res.data.message
             })
@@ -732,6 +735,7 @@
         })
       },
       loginByCode() {
+        this.onLogin = true
         let url = 'user/loginByCode.do', params = {
           username: this.loginForm.loginName,
           code: this.loginForm.verificationCode
@@ -747,6 +751,7 @@
               this.$router.push({path: this.from})
             }
           } else if (res.data.status === 0) {
+            this.onLogin = false 
             if (this.loginForm.verificationCodeNum < 4) {
               this.loginForm.verificationCodeNum += 1
               this.loginForm.errorMsg = 'verificationCodeMistake'
@@ -754,6 +759,7 @@
               this.loginForm.errorMsg = 'verificationCodeMistakeTanto'
             }
           } else {
+            this.onLogin = false
             this.$message.info({
               content: res.data.message
             })
