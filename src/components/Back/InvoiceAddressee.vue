@@ -657,7 +657,9 @@ export default {
     receiptInfoAdd_open (name) {
       this.$refs[name].resetFields()
       this.addresseeTitleModal = '新增'
-      // this.formReceipt = {}
+      this.formReceipt.province = '北京市'
+      this.changeProvince('北京市')
+      this.changeArea('北京市')
       this.showModal.receiptInfoAdd = true
     },
     invoiceInfoAdd_open (name) {

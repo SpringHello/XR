@@ -240,6 +240,7 @@
                   <Option v-for="item in countyList" :value="item" :key="item">{{item}}</Option>
                 </Select>
               </FormItem>
+              <!-- 三级联动赋值会出问题，所以有收件人不为空时，改用input赋值 -->
               <FormItem label="区域" v-else>
                 <Input
                   style="width:93px;"
