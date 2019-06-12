@@ -3408,6 +3408,9 @@
         this.searchCard()
       },
       OrderchangePage(currentPage) {
+        this.orderNumber = []
+        this.AllMpneylength='0'
+        this.AllMpney='0.0'
         this.currentORderPage=currentPage
         this.getOrder()
       },
