@@ -398,7 +398,7 @@
         <div class="overlay" @click="showModal.OpenMembership=false" v-if="showModal.OpenMembership">
           <div class="shipmodel" @click.stop="$router.push('/activity/BlacKActivities')">
             <div class="header">
-              <!-- <img src="../../../assets/img/active/freeToReceive/fr-xx.png" @click.stop="showModal.OpenMembership=false"> -->
+              <img src="../../../assets/img/active/freeToReceive/fr-xx.png" @click.stop="showModal.OpenMembership=false">
             </div>
             <div class="body">
                 
@@ -1956,17 +1956,17 @@
   .shipmodel{
     background: url("../../../assets/img/active/freeToReceive/fr-welcome.png") no-repeat;
     width: 400px;
-    height: 489px;
+    height: 220px;
     position: relative;
     margin: 0 auto;
     cursor: pointer;
-    top: 15%;
+    top: 33%;
     .header{
       background: none;
        > img{
          position: absolute;
-         right: -40px;
-         top: 0;
+         right: 10px;
+         top: 10px;
          cursor: pointer;
        }
     }
