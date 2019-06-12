@@ -1319,6 +1319,7 @@
         CreatTimesort:'',
         PayTimesort:'',
         switchloading:false,
+        numorder:'',
         PreferentialOrder:'',
         // 账单-资源详情变量
         columnsResources: [
@@ -3825,6 +3826,7 @@
            }}).then(res=>{
               if(res.data.status == 1){
                  if(res.data.result.isUseVoucher == 1){
+                   this.numorder=params.row.ordernumber
                      this.payForm.cashCoupon = this.voucher > parseInt(this.payForm.paymentAmount) ? this.payForm.paymentAmount : this.voucher
                      this.payForm.cashCouponBalance = this.voucher > parseInt(this.payForm.paymentAmount) ? (this.voucher - this.payForm.paymentAmount).toFixed(2) : 0
                   } else{
@@ -3873,9 +3875,32 @@
       },
       payOk() {
         let order = ''
-        this.orderNumber.forEach(item => {
-          order += ',' + item.ordernumber
-        })
+        if(this.orderNumber==null||this.orderNumber==''||this.orderNumber==[]){
+          order=this.numorder
+         var paramsA = {
+              order: order,
+              ticket: this.operatorid
+            }
+           var paramsT ={ 
+              order: order,
+              ticket: this.operatorid,
+              money: (this.payForm.paymentAmount - this.voucher).toFixed(2)
+            }
+        }
+        else{
+          this.orderNumber.forEach(item => {
+            order += ',' + item.ordernumber
+          })
+         var paramsA = {
+              order: order.substr(1),
+              ticket: this.operatorid
+            }
+            var paramsT ={ 
+              order: order.substr(1),
+              ticket: this.operatorid,
+              money: (this.payForm.paymentAmount - this.voucher).toFixed(2)
+            }
+        }
         let orderStatus = ''
         this.orderNumber.forEach(item=>{
           orderStatus += JSON.parse(item.display)['类型']
@@ -3883,10 +3908,7 @@
         sessionStorage.setItem('orderStatus', orderStatus)
         if (this.voucher > parseInt(this.payForm.paymentAmount)) {
           axios.get('information/payOrder.do', {
-            params: {
-              order: order.substr(1),
-              ticket: this.operatorid
-            }
+            params: paramsA
           }).then(res => {
             if (res.status == 200 && res.data.status == 1) {
               window._agl && window._agl.push(['track', ['success', {t: 3}]])
@@ -3906,11 +3928,7 @@
           })
         } else {
           this.$http.get('information/zfconfirm.do', {
-            params: {
-              order: order.substr(1),
-              ticket: this.operatorid,
-              money: (this.payForm.paymentAmount - this.voucher).toFixed(2)
-            }
+            params: paramsT
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               let overtime = new Date(this.orderNumber[0].overTime).getTime()

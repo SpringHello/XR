@@ -4096,12 +4096,22 @@
         this.$refs.cashverification.validateField('messagecode', (text) => {
           if (text == '') {
             let url = 'user/judgeCode.do'
-            axios.get(url, {
-              params: {
+            let params = {}
+            if (this.userInfo.phone) {
+              params = {
                 aim: this.userInfo.phone,
                 isemail: 0,
                 code: this.formCustom.messagecode
               }
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                code: this.formCustom.messagecode
+              }
+            }
+            axios.get(url, {
+              params
             }).then(res => {
               if (res.data.status == 1 && res.status == 200) {
                 this.$router.push('/cancellationaccount')
@@ -4121,7 +4131,9 @@
           if (response.status == 200 && response.data.status == 1) {
             if (response.data.authInfo) {
               this.userphone = response.data.authInfo.phone
-            } else {
+            } else if(response.data.authInfo_persion){
+              this.userphone = response.data.authInfo_persion.phone
+            }else {
               this.userphone = response.data.result.phone
             }
           }
