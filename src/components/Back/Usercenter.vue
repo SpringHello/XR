@@ -696,7 +696,7 @@
           </FormItem>
           <FormItem prop="messagecode">
             <Input v-model="formCustom.messagecode" placeholder="请输入收到的验证码" style="width: 300px;"></Input>
-            <Button type="primary" @click="getPhoneCode('code')" :disabled="formCustom.newCodeText !='获取验证码' " style="margin-left: 10px;">{{formCustom.newCodeText}}
+            <Button type="primary" @click="getPhoneCode('code')" :disabled="formCustom.newCodeText !='获取验证码' && userphone" style="margin-left: 10px;">{{formCustom.newCodeText}}
             </Button>
           </FormItem>
         </Form>
