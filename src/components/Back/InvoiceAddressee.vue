@@ -478,7 +478,6 @@ export default {
                     click: () => {
                       this.$refs['formReceipt'].resetFields();
                       this.formReceipt = JSON.parse(JSON.stringify(params.row));
-                      this.changeArea(params.row.city);
                       this.formReceipt.code = '';
                       this.addresseeTitleModal = '修改';
                       this.showModal.receiptInfoAdd = true;
