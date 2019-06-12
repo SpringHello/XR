@@ -3559,7 +3559,7 @@
         this.$http.get('continue/showMoneyByMonth.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.billmonth = response.data.result
-            this.theCumulative = response.data.total_amount
+            this.theCumulative = response.data.result
             if(this.$store.state.userInfo.balanceAlarmStatus==1){
               this.BalanceAlarmSwitch=true
             }
