@@ -336,7 +336,7 @@
               <Table :columns="columns5" :data="data5" type="selection" @on-sort-change="SortField" @on-selection-change="select" @on-select="selectone" @on-select-cancel="selectonechange" @on-select-all="selectAllchange" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
               <div style="margin: 10px;">
                 <div style="float: right;overflow: hidden">
-                  <Page :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" :page-size="OrderSize" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
+                  <Page :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
                 </div>
               </div>
             </div>
@@ -1105,7 +1105,7 @@
                 <Radio label="可用余额"></Radio>
             </RadioGroup>
           </p>
-          <p>仅判断可用余额额度与告警额度大小</p>
+          <p>仅判断可用余额与现金券余额之和与告警额度大小</p>
           <p>
             <span>告警额度</span>
             <InputNumber :max="999999999" :min="1" v-model="BalanceRepval" style="width: 300px"></InputNumber>
@@ -1320,7 +1320,6 @@
         PayTimesort:'',
         switchloading:false,
         numorder:'',
-        orderall:[],
         PreferentialOrder:'',
         // 账单-资源详情变量
         columnsResources: [
@@ -2871,7 +2870,6 @@
         cardscurrent:1,
         Cardopts:[10,20,50,100],
         Orderopts:[10,20,50,100],
-        OrderSize:10,
         cardPageSize: 10,
         invoice: 0,
         invoiceList: true,
@@ -3422,13 +3420,6 @@
               this.switchloading=false
               this.data5=response.data.result.info
               this.OrderPages=response.data.result.count
-              var num=parseInt(response.data.result.pageSize)
-              this.OrderpageSize=num
-              this.Orderopts.forEach((item,index)=>{
-                if(item==num){
-                  this.OrderSize=num
-                }
-              })
             }
           })
       },
@@ -3836,7 +3827,6 @@
               if(res.data.status == 1){
                  if(res.data.result.isUseVoucher == 1){
                    this.numorder=params.row.ordernumber
-                   this.orderall=params.row
                      this.payForm.cashCoupon = this.voucher > parseInt(this.payForm.paymentAmount) ? this.payForm.paymentAmount : this.voucher
                      this.payForm.cashCouponBalance = this.voucher > parseInt(this.payForm.paymentAmount) ? (this.voucher - this.payForm.paymentAmount).toFixed(2) : 0
                   } else{
@@ -3941,24 +3931,13 @@
             params: paramsT
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              if(this.orderNumber==null||this.orderNumber==''||this.orderNumber==[]){
-                var overtime = new Date(this.orderall.overTime).getTime()
-                // this.orderall.forEach(item => {
-                //   let overTime = new Date(item.overTime).getTime()
-                //   if (overTime < overtime) {
-                //     overtime = overTime
-                //   }
-                // })
-              }
-              else{
-                var overtime = new Date(this.orderNumber[0].overTime).getTime()
-                this.orderNumber.forEach(item => {
-                  var overTime = new Date(item.overTime).getTime()
-                  if (overTime < overtime) {
-                    overtime = overTime
-                  }
-                })
-              }
+              let overtime = new Date(this.orderNumber[0].overTime).getTime()
+              this.orderNumber.forEach(item => {
+                let overTime = new Date(item.overTime).getTime()
+                if (overTime < overtime) {
+                  overtime = overTime
+                }
+              })
               sessionStorage.setItem('overtime', this.toStr(overtime))
               sessionStorage.setItem('payInfo', JSON.stringify(response.data.result))
               this.$router.push({
