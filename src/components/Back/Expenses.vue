@@ -335,9 +335,7 @@
               </p>
               <Table :columns="columns5" :data="data5" type="selection" @on-sort-change="SortField" @on-selection-change="select" @on-select="selectone" @on-select-cancel="selectonechange" @on-select-all="selectAllchange" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
               <div style="margin: 10px;">
-                <div style="float: right;overflow: hidden">
-                  <Page :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
-                </div>
+                <Page style="float: right;overflow: hidden" :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" :page-size="OrderSize" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
               </div>
             </div>
            
@@ -1105,7 +1103,7 @@
                 <Radio label="可用余额"></Radio>
             </RadioGroup>
           </p>
-          <p>仅判断可用余额与现金券余额之和与告警额度大小</p>
+          <p>仅判断可用余额额度与告警额度大小</p>
           <p>
             <span>告警额度</span>
             <InputNumber :max="999999999" :min="1" v-model="BalanceRepval" style="width: 300px"></InputNumber>
@@ -1321,6 +1319,8 @@
         switchloading:false,
         numorder:'',
         PreferentialOrder:'',
+        OrderSize:10,
+        orderall:[],
         // 账单-资源详情变量
         columnsResources: [
             {
@@ -3156,6 +3156,18 @@
           }
       }
     },
+    beforeRouteEnter(to, from, next) {
+      axios.get('user/GetUserInfo.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            $store.commit('setAuthInfo', {
+              authInfo: response.data.authInfo,
+              userInfo: response.data.result,
+              authInfoPersion: response.data.authInfo_persion
+            })
+          }
+        })
+        next()
+    },
     created() {
       this.getUserVipLevel()
         this.getBalance()
@@ -3380,6 +3392,9 @@
         this.searchCard()
       },
       chargeType(lable){
+       this.orderNumber=[]
+       this.AllMpneylength='0'
+       this.AllMpney='0.0'
         this.button5=lable
         this.getOrder()
         this.switchloading=true
@@ -3420,6 +3435,13 @@
               this.switchloading=false
               this.data5=response.data.result.info
               this.OrderPages=response.data.result.count
+              var num=parseInt(response.data.result.pageSize)
+              this.OrderpageSize=num
+              this.Orderopts.forEach((item,index)=>{
+                if(item==num){
+                  this.OrderSize=num
+                }
+              })
             }
           })
       },
@@ -3486,6 +3508,7 @@
           this.paymentStatusValue='0'
           this.paneStatus.expenses='orderManage'
           this.changecard()
+          this.paymentStatusValue=''
         }
         else if(value=='myCard'){
           this.VoucherStatus=''
@@ -3827,6 +3850,7 @@
               if(res.data.status == 1){
                  if(res.data.result.isUseVoucher == 1){
                    this.numorder=params.row.ordernumber
+                   this.orderall=params.row
                      this.payForm.cashCoupon = this.voucher > parseInt(this.payForm.paymentAmount) ? this.payForm.paymentAmount : this.voucher
                      this.payForm.cashCouponBalance = this.voucher > parseInt(this.payForm.paymentAmount) ? (this.voucher - this.payForm.paymentAmount).toFixed(2) : 0
                   } else{
@@ -3931,13 +3955,24 @@
             params: paramsT
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              let overtime = new Date(this.orderNumber[0].overTime).getTime()
-              this.orderNumber.forEach(item => {
-                let overTime = new Date(item.overTime).getTime()
-                if (overTime < overtime) {
-                  overtime = overTime
-                }
-              })
+              if(this.orderNumber==null||this.orderNumber==''||this.orderNumber==[]){
+                var overtime = new Date(this.orderall.overTime).getTime()
+                // this.orderall.forEach(item => {
+                //   let overTime = new Date(item.overTime).getTime()
+                //   if (overTime < overtime) {
+                //     overtime = overTime
+                //   }
+                // })
+              }
+              else{
+                var overtime = new Date(this.orderNumber[0].overTime).getTime()
+                this.orderNumber.forEach(item => {
+                  var overTime = new Date(item.overTime).getTime()
+                  if (overTime < overtime) {
+                    overtime = overTime
+                  }
+                })
+              }
               sessionStorage.setItem('overtime', this.toStr(overtime))
               sessionStorage.setItem('payInfo', JSON.stringify(response.data.result))
               this.$router.push({
@@ -4013,7 +4048,6 @@
           this.orderNumber = this.data5.filter(item=>{
             return item._checked==true
           })
-          console.log(this.orderNumber)
           this.AllMpneylength=this.orderNumber.length
           // this.costSeen = true
           var cost = 0
@@ -4027,7 +4061,6 @@
           })
           // console.log(arr)
           this.ordernumS=arr.toString(',')
-          console.log(this.ordernumS)
           this.totalCost = Math.round(cost * 100) / 100
           this.actualDelivery = this.totalCost
           this.InquiryPrice()
@@ -4924,7 +4957,7 @@
       }
       ,
       refundDisabled() {
-        if (this.orderNumber.some(checkReturnMoneyFlag) || this.orderNumber.length === 0) {
+        if (this.orderNumber.some(checkReturnMoneyFlag) ||this.orderNumber.length === 0 || this.orderNumber.length > 1) {
           return true
         } else {
           return false
