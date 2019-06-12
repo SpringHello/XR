@@ -324,7 +324,7 @@
                   <Button type="primary" @click="getOrder('1')">查询</Button>
                 </span>
               </p>
-              <Table :columns="columns5" :data="data5" @on-sort-change="SortField" @on-selection-change="select" @on-select="selectone" @on-select-cancel="selectonechange" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
+              <Table :columns="columns5" :data="data5" type="selection" @on-sort-change="SortField" @on-selection-change="select" @on-select="selectone" @on-select-cancel="selectonechange" @on-select-all="selectAllchange" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
               <div style="margin: 10px;">
                 <div style="float: right;overflow: hidden">
                   <Page :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
@@ -760,7 +760,7 @@
       </p>
     </Modal>
     <!-- 优惠券兑换modal -->
-    <Modal v-model="showModal.exchangeCard" width="600" :scrollable="true" :mask-closable="false">
+    <Modal v-model="showModal.exchangeCard" width="600" :scrollable="true" :mask-closable="false" :closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">兑换优惠券</span>
       </p>
@@ -778,7 +778,8 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="exchange">兑换</Button>
+        <Button @click="closeexchangeCard">取消</Button>
+        <Button type="primary" @click="exchange" style="margin-left:10px;">兑换</Button>
       </div>
     </Modal>
 
@@ -3148,7 +3149,7 @@
         //orderManage(订单管理) accountSummary(财务总览) myCard(我的卡劵) applyInvoice(发票管理) bills(账单)
         if(sessionStorage.getItem('expensesTab')){
           let tab = sessionStorage.getItem('expensesTab')
-          this.name = tab
+          this.paneStatus.expenses = tab
           this.changecard()
           sessionStorage.removeItem('expensesTab')
         }
@@ -3445,30 +3446,30 @@
         //this.changeOrder()
         if(value=='orderManage'){
           this.paymentStatusValue=''
-          this.name='orderManage'
+          this.paneStatus.expenses='orderManage'
           this.changecard()
         }
         else if(value=='orderManagepay'){
           this.paymentStatusValue='0'
-          this.name='orderManage'
+          this.paneStatus.expenses='orderManage'
           this.changecard()
         }
         else if(value=='myCard'){
           this.VoucherStatus=''
-          this.name='myCard'
+          this.paneStatus.expenses='myCard'
           this.changecard()
         }
         else if(value=='myCardnot'){
           this.VoucherStatus='0'
-          this.name='myCard'
+          this.paneStatus.expenses='myCard'
           this.changecard()
         }
         else if(value=='invoicejmp'){
-          this.name='applyInvoice'
+          this.paneStatus.expenses='applyInvoice'
           this.changecard()
         }
         else if(value=='billjump'){
-          this.name='bills'
+          this.paneStatus.expenses='bills'
           this.changecard()
         }
       },
@@ -3494,7 +3495,8 @@
         this.activeIndex = null
       },
       changecard() {
-        switch (this.name) {
+        // console.log(this.paneStatus.expenses)
+        switch (this.paneStatus.expenses) {
           case 'orderManage':
             //this.searchOrderByType()
             this.getOrder('1')
@@ -3920,26 +3922,35 @@
           }
         })
       },
+      selectAllchange(val) {
+        if (val) {
+          this.data5.forEach((item,index) => {
+              this.$set(this.data5[index],'_checked',true)
+          })
+        }
+      },
       select(selection) {
-        this.orderNumber = []
-        this.totalCost = 0
-        var arr = []
-        this.orderNumber = this.data5.filter(item=>{
-          return item._checked==true
-        })
-        if (this.orderNumber.length != 0) {
+        if (selection.length) {
+          // console.log(selection)
+          this.orderNumber = []
+          this.totalCost = 0
+          var arr = []
+          this.orderNumber = this.data5.filter(item=>{
+            return item._checked==true
+          })
+          this.AllMpneylength=this.orderNumber.length
           // this.costSeen = true
           var cost = 0
           this.orderNumber.forEach((item,index) => {
             if (item && item.paymentstatus == 0) {
               cost += Number.parseFloat(item.cost)
             }
-            arr = this.orderNumber.map(item=>{
-              return item.ordernumber
-            })
           })
+          arr = this.orderNumber.map(item=>{
+            return item.ordernumber
+          })
+          // console.log(arr)
           this.ordernumS=arr.toString(',')
-          this.AllMpneylength=arr.length
           this.totalCost = Math.round(cost * 100) / 100
           this.actualDelivery = this.totalCost
           this.InquiryPrice()
@@ -3949,7 +3960,10 @@
           this.cardSelection = null
           this.activeIndex = null
         } else {
-          // this.costSeen = false
+          this.data5.forEach((item,index) => {
+              this.$set(this.data5[index],'_checked',false)
+          })
+          this.ordernumS = ''
           this.AllMpney='0.0'
           this.AllMpneylength='0'
         }
@@ -4385,6 +4399,11 @@
             this.exchangeCardCodeError = true
           }
         })
+      },
+      closeexchangeCard(){
+        this.showModal.exchangeCard=false
+        this.exchangeCardCode=''
+        this.exchangeCardMessage=''
       },
       // 提现操作
       withdraw() {
@@ -4893,6 +4912,10 @@
     })
     ,
     watch: {
+      //从顶部点入选中tab,不调用接口的情况
+      paneStatus(val) {
+        this.changecard()
+      },
       dateRange() {
         this.search()
       },
