@@ -5,6 +5,10 @@
         <Icon type="load-c" size=80 class="demo-spin-icon-load"></Icon>
         <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在支付，请稍后...</span>
       </Spin>
+      <Spin fix v-show="switchloading">
+        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+        <div>正在切換，请稍后...</div>
+      </Spin>
       <span>费用中心</span>
       <div class="content">
         <!-- <svg class="icon" aria-hidden="true">
@@ -85,7 +89,7 @@
                 <img src="../../assets/img/back/daizhifu.png"/>
               </div>
               <div class="item4" @click="UnpaidJump('myCard')">
-                <p>代金券数量</p>
+                <p>可用代金券数量</p>
                 <p>
                   <span>{{ couponNumber }}</span>
                   张
@@ -299,6 +303,7 @@
             <div class="ordertype">
               <p>
                 <RadioGroup v-model="button5" type="button" @on-change="chargeType">
+                  <Radio label="">全部</Radio>
                   <Radio label="1">包年包月</Radio>
                   <Radio label="3">实时计费</Radio>
               </RadioGroup>
@@ -1061,7 +1066,9 @@
         <p style="margin-top:10px;">现金券支付金额：<span>¥{{payForm.cashCoupon }}</span></p>
         <p style="margin-top:10px;">现金券余额：<span>¥{{ payForm.cashCouponBalance}}</span></p>
       </div>
-       <p class="paypthree" v-if="voucher <= parseInt(payForm.paymentAmount)">待支付金额<span>¥{{ (payForm.paymentAmount - voucher).toFixed(2)}}</span></p>
+      <!-- v-if="voucher <= parseInt(payForm.paymentAmount)" -->
+      <!-- {{ (payForm.paymentAmount - voucher).toFixed(2)}} -->
+       <p class="paypthree" >待支付金额<span>¥{{payForm.paymentAmount}}</span></p>
       <div slot="footer" class="modal-footer-border">
         <Button @click="showModal.payAffirm=false">取消</Button>
         <Button type="primary" @click="payOk" style="margin-left:10px;">去支付</Button>
@@ -1311,6 +1318,7 @@
         TransactionAmountsort:'',
         CreatTimesort:'',
         PayTimesort:'',
+        switchloading:false,
         PreferentialOrder:'',
         // 账单-资源详情变量
         columnsResources: [
@@ -1849,8 +1857,15 @@
                               on: {
                                 click: () => {
                                   this.orderNumber=[]
-                                  this.orderNumber.push(params.row)
-                                  this.orderPay()
+                                  //this.orderNumber.push(params.row)
+                                  
+                                  this.data5.forEach((item,index)=>{
+                                    if(item._checked==true){
+                                      item._checked=false
+                                      this.data5.splice(index, 1, item)
+                                    }
+                                  })
+                                  this.payorderone(params)
                                 }
                               }
                             },
@@ -2144,7 +2159,7 @@
         //BalanceAlarmSwitchdis:false,
         BalanceRepeadio: '',
         BalanceRepval:50,
-        button5: '1',
+        button5: '',
         vipRule: [
           {
             title: '类目',
@@ -3366,6 +3381,7 @@
       chargeType(lable){
         this.button5=lable
         this.getOrder()
+        this.switchloading=true
       },
       VoucherChange(label){
         this.VoucherStatus=label
@@ -3400,6 +3416,7 @@
           }
         }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
+              this.switchloading=false
               this.data5=response.data.result.info
               this.OrderPages=response.data.result.count
             }
@@ -3800,6 +3817,28 @@
         this.getOrder('1')
         this.init()
       },
+      payorderone(params){
+        this.payForm.paymentAmount = params.row.cost
+        this.$http.get('information/zfconfirm.do',{params:{
+           order: params.row.ordernumber,
+           money: params.row.cost
+           }}).then(res=>{
+              if(res.data.status == 1){
+                 if(res.data.result.isUseVoucher == 1){
+                     this.payForm.cashCoupon = this.voucher > parseInt(this.payForm.paymentAmount) ? this.payForm.paymentAmount : this.voucher
+                     this.payForm.cashCouponBalance = this.voucher > parseInt(this.payForm.paymentAmount) ? (this.voucher - this.payForm.paymentAmount).toFixed(2) : 0
+                  } else{
+                       this.payForm.cashCoupon = 0
+                       this.payForm.cashCouponBalance = this.voucher
+                     }
+                       this.showModal.payAffirm = true
+                } else{
+                  this.$message.info({
+                       content: res.data.message
+                  })
+              }
+       })
+      },
       orderPay() {
       /*this.payForm.paymentAmount = this.orderNumber.map(item => {
          return item.cost
@@ -3923,7 +3962,7 @@
       },
       selectone(selection,row){
         this.data5.forEach((item,index) => {
-          if(row.ordercreatetime==item.ordercreatetime){
+          if(row.complexorderbatch&&row.complexorderbatch==item.complexorderbatch){
             item._checked=true
             this.data5.splice(index, 1, item)
           }
@@ -3978,6 +4017,7 @@
           this.data5.forEach((item,index) => {
               this.$set(this.data5[index],'_checked',false)
           })
+          this.orderNumber = []
           this.ordernumS = ''
           this.AllMpney='0.0'
           this.AllMpneylength='0'
@@ -3991,6 +4031,7 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.AllMpney=response.data.result
+            //this.actualDelivery = response.data.result
           }
         })
       },

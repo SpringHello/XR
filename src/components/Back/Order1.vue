@@ -512,7 +512,11 @@ export default {
             }
           })
           .then(response => {
-            this.couponInfo.couponList = response.data.result;
+            response.data.result.forEach(item =>{
+              if(item.notOverTime != 1 || item.notOverTime != 2){
+                 this.couponInfo.couponList.push(item);
+              }
+            })
           });
 
         axios
