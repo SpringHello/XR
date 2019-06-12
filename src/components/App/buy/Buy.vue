@@ -621,7 +621,7 @@
             })
           } else {
             this.$message.info({
-              content: responseList[0].data.message
+              content: '创建订单失败，请稍候再试'
             })
           }
         })
