@@ -814,7 +814,13 @@ export default {
           }
           axios.post(url, params).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$Message.success(`${this.addresseeTitleModal}收件开票成功`)
+              if(type==1) {
+                this.$message.confirm({
+                  content: '您的增值税专用发票信息提交成功，我们将在一个工作日内对您的信息进行审核，请耐心等待。',
+                })
+              } else {
+                this.$Message.success(`${this.addresseeTitleModal}开票成功`)
+              }
               this.showModal.invoiceInfo = false
               this.getInvoiceList()
             } else {
