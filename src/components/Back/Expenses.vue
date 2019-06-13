@@ -3188,22 +3188,11 @@
         this.getVipList()
         sessionStorage.removeItem('beVip')
       }
-      this.defaultTab()
       this.defaultTabOther()
     },
     mounted() {
     },
     methods: {
-      // 默认选中tab
-      defaultTab() {
-        //orderManage(订单管理) accountSummary(财务总览) myCard(我的卡劵) applyInvoice(发票管理) bills(账单)
-        if(sessionStorage.getItem('expensesTab')){
-          let tab = sessionStorage.getItem('expensesTab')
-          this.paneStatus.expenses = tab
-          this.changecard()
-          sessionStorage.removeItem('expensesTab')
-        }
-      },
       // 从其他项目(文档)跳转到费用中心，并且选中tab
       defaultTabOther(){
         this.paneStatus.expenses = this.$route.query.tabs
@@ -4972,7 +4961,7 @@
       }
       ,
       refundDisabled() {
-        if (this.orderNumber.some(checkReturnMoneyFlag) ||this.orderNumber.length === 0 || this.orderNumber.length > 1) {
+        if (this.orderNumber.some(checkReturnMoneyFlag) ||this.orderNumber.length === 0) {
           return true
         } else {
           return false

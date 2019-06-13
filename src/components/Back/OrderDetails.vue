@@ -237,17 +237,15 @@ export default {
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success("订单删除成功");
-                  sessionStorage.setItem("expensesTab", "orderManage");
                   sessionStorage.removeItem("orderid");
-                  this.$router.push("Expenses");
+                  this.$router.push("expenses?tabs=applyInvoice");
                 }
               })
     },
     cancelOrder() {},
     ReturnPage() {
-      sessionStorage.setItem("expensesTab", "orderManage");
       sessionStorage.removeItem("orderid");
-      this.$router.push("Expenses");
+      this.$router.push("expenses?tabs=applyInvoice");
     },
     payorder(){
       axios.get('information/payOrder.do', {
