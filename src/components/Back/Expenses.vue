@@ -18,6 +18,7 @@
               style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">费用中心</span>
         <Tabs v-model="paneStatus.expenses" type="card" :animated="false" @on-click="changecard"
               style="margin-top: 20px;min-height: 650px;padding-bottom:140px;">
+        <a href="https://www.xrcloud.net/support_docs/wzueJPw4o_x0LWYBjJu.html" style="position: absolute;right: 0;top: 6px;font-size: 14px;">查看费用中心更新详情</a>
           <Tab-pane label="财务总览" name="accountSummary">
             <div class="money">
               <div class="item1">
@@ -217,6 +218,11 @@
                     <li>¥{{billDatetypeTotal}}</li>
                   </ul>
                 </div>
+              </div>
+              <div class="alert-warning" style="margin-top:20px;background:none;color:#666;border-color:#F5A623;font-size:12px;">
+                <p>为什么账单汇总金额与账单概览金额不一致？</p>
+                <p>费用中心更新之后，由于数据结构变更，6月12日之前的数据无法在新版费用中心的账单汇总中进行展示，导致您无法再【账单概览】页面中查询6月以前的账单，</p>
+                <p>若您需要查询6月以前的消费详情，可通过【费用】-【账单】-【流水详单】进行查看，流水详单中记录了您账号下自创建以来所有消费信息</p>
               </div>
             </div>
             <!-- 资源详情 -->
@@ -3183,6 +3189,7 @@
         sessionStorage.removeItem('beVip')
       }
       this.defaultTab()
+      this.defaultTabOther()
     },
     mounted() {
     },
@@ -3197,6 +3204,11 @@
           sessionStorage.removeItem('expensesTab')
         }
       },
+      // 从其他项目(文档)跳转到费用中心，并且选中tab
+      defaultTabOther(){
+        this.paneStatus.expenses = this.$route.query.tabs
+      },
+      // 切换到导出记录调用一下接口
       billChangeTabs(index) {
         if(index == 3) {
           this.getExportTable()

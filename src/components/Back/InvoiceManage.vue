@@ -272,16 +272,14 @@
                 <Button
                   type="primary"
                   style="font-size: 12px;margin-left: 237px"
-                  v-if="this.normalInvoiceLength == 0 || this.addresseeLength == 0"
+                  v-if="normalInvoiceLength == 0 || addresseeLength == 0"
                   @click="invoiceInfoSave('formInvoiceDate')"
                 >下一步</Button>
-                <!-- <Button type="primary" style="font-size: 12px;margin-left: 237px" v-if=""
-                        @click="invoiceMake('formInvoiceDate')">确认开票
-                </Button>-->
                 <Button
+                  v-else
                   type="primary"
                   style="font-size: 12px;margin-left: 237px"
-                  v-else
+                  :disabled="!((formInvoiceDate.InvoiceType==1&&specialInvoiceStatus==0)||formInvoiceDate.InvoiceType==0)"
                   @click="invoiceMake('formInvoiceDate')"
                 >确认开票</Button>
               </Form-item>
