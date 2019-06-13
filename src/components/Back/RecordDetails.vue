@@ -2212,7 +2212,7 @@ export default {
         backgroundAddress: this.hostUnitList.mark2,
         backgroundName: this.hostUnitList.mark3,
         backgroundPhone: this.hostUnitList.mark4,
-        mainrecordnumber:this.hostUnitList.mainrecordnumber == undefined ?'':this.hostUnitList.mainrecordnumber,
+        mainrecordnumber:this.hostUnitList.mainrecordnumber,
         icprecordpassword:this.hostUnitList.icprecordpassword,
         urgentLinkManNumber:this.hostUnitList.urgentlinkmannumber,
         webLinkMainRelationship:this.hostUnitList.weblinkmainrelationship,
@@ -2251,7 +2251,7 @@ export default {
       };
       let addMian = this.$http.post("recode/addMainCompany.do", main);
       Promise.all([update, addMian]).then(res => {
-        if (res[0].data.status == 1 && res[1].data.status == 1) {
+        if (res[0].data.status == 1) {
           this.$router.push({ path: "BRecords" });
           this.$Message.success("修改成功");
         } else {

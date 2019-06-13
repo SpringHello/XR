@@ -538,9 +538,9 @@
         if (localStorage.getItem('sellCode')) {
           params.sellCode  = localStorage.getItem('sellCode')
         }
-        axios.get('user/register.do', {
+        axios.post('user/register.do',
           params
-        }).then(response => {
+        ).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.T = 'success'
             // 获取所有后台需要的基本信息
