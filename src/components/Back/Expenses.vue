@@ -4972,7 +4972,7 @@
       }
       ,
       refundDisabled() {
-        if (this.orderNumber.some(checkReturnMoneyFlag) ||this.orderNumber.length === 0 || this.orderNumber.length > 1) {
+        if (this.orderNumber.some(checkReturnMoneyFlag) ||this.orderNumber.length === 0) {
           return true
         } else {
           return false
