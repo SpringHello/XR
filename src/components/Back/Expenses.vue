@@ -341,9 +341,7 @@
               </p>
               <Table :columns="columns5" :data="data5" type="selection" @on-sort-change="SortField" @on-selection-change="select" @on-select="selectone" @on-select-cancel="selectonechange" @on-select-all="selectAllchange" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
               <div style="margin: 10px;">
-                <div style="float: right;overflow: hidden">
-                  <Page :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" :page-size="OrderSize" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
-                </div>
+                <Page style="float: right;overflow: hidden" :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" :page-size="OrderSize" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
               </div>
             </div>
            
@@ -1326,8 +1324,9 @@
         PayTimesort:'',
         switchloading:false,
         numorder:'',
-        orderall:[],
         PreferentialOrder:'',
+        OrderSize:10,
+        orderall:[],
         // 账单-资源详情变量
         columnsResources: [
             {
@@ -2877,7 +2876,6 @@
         cardscurrent:1,
         Cardopts:[10,20,50,100],
         Orderopts:[10,20,50,100],
-        OrderSize:10,
         cardPageSize: 10,
         invoice: 0,
         invoiceList: true,
@@ -3164,6 +3162,18 @@
           }
       }
     },
+    beforeRouteEnter(to, from, next) {
+      axios.get('user/GetUserInfo.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            $store.commit('setAuthInfo', {
+              authInfo: response.data.authInfo,
+              userInfo: response.data.result,
+              authInfoPersion: response.data.authInfo_persion
+            })
+          }
+        })
+        next()
+    },
     created() {
       this.getUserVipLevel()
         this.getBalance()
@@ -3394,6 +3404,9 @@
         this.searchCard()
       },
       chargeType(lable){
+       this.orderNumber=[]
+       this.AllMpneylength='0'
+       this.AllMpney='0.0'
         this.button5=lable
         this.getOrder()
         this.switchloading=true
@@ -3407,6 +3420,9 @@
         this.searchCard()
       },
       OrderchangePage(currentPage) {
+        this.orderNumber = []
+        this.AllMpneylength='0'
+        this.AllMpney='0.0'
         this.currentORderPage=currentPage
         this.getOrder()
       },
@@ -3507,6 +3523,7 @@
           this.paymentStatusValue='0'
           this.paneStatus.expenses='orderManage'
           this.changecard()
+          this.paymentStatusValue=''
         }
         else if(value=='myCard'){
           this.VoucherStatus=''
@@ -3580,7 +3597,7 @@
         this.$http.get('continue/showMoneyByMonth.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.billmonth = response.data.result
-            this.theCumulative = response.data.total_amount
+            this.theCumulative = response.data.result
             if(this.$store.state.userInfo.balanceAlarmStatus==1){
               this.BalanceAlarmSwitch=true
             }
@@ -4046,7 +4063,6 @@
           this.orderNumber = this.data5.filter(item=>{
             return item._checked==true
           })
-          console.log(this.orderNumber)
           this.AllMpneylength=this.orderNumber.length
           // this.costSeen = true
           var cost = 0
@@ -4060,7 +4076,6 @@
           })
           // console.log(arr)
           this.ordernumS=arr.toString(',')
-          console.log(this.ordernumS)
           this.totalCost = Math.round(cost * 100) / 100
           this.actualDelivery = this.totalCost
           this.InquiryPrice()
@@ -4957,7 +4972,7 @@
       }
       ,
       refundDisabled() {
-        if (this.orderNumber.some(checkReturnMoneyFlag) || this.orderNumber.length === 0) {
+        if (this.orderNumber.some(checkReturnMoneyFlag) ||this.orderNumber.length === 0 || this.orderNumber.length > 1) {
           return true
         } else {
           return false
