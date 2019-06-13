@@ -752,8 +752,7 @@ export default {
       })
     },
     toExpenses () {
-      sessionStorage.setItem("expensesTab", "applyInvoice");
-      this.$router.push("expenses");
+      this.$router.push("expenses?tabs=applyInvoice");
     },
     affirmCertification (name) {
       this.$refs[name].validate((valid) => {
@@ -785,10 +784,6 @@ export default {
     },
     invoiceCertification () {
       this.applyChange = false
-    },
-    toExpenses () {
-      sessionStorage.setItem('expensesTab', 'applyInvoice')
-      this.$router.push('expenses')
     },
     // 切换省份
     changeProvince (val) {
