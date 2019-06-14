@@ -272,7 +272,7 @@
                 <Button
                   type="primary"
                   style="font-size: 12px;margin-left: 237px"
-                  v-if="normalInvoiceLength == 0 || addresseeLength == 0"
+                  v-if="(normalInvoiceLength == 0 || addresseeLength == 0)&&!makeInvoiceShow"
                   @click="invoiceInfoSave('formInvoiceDate')"
                 >下一步</Button>
                 <Button
@@ -441,6 +441,8 @@ export default {
       }
     }
     return {
+      // 不管保存收件人、发票信息失败或者成功，都跳转到确认开票
+      makeInvoiceShow: false,
       speacialInvoiceLength: 0,
       area: area,
       areaList: [],
@@ -726,8 +728,8 @@ export default {
           this.getAddresseeList()
         } else {
           this.$Message.error(response.data.message)
-          // this.addAddresseeResult = false
         }
+        this.makeInvoiceShow = true
       })
     },
     addInvoiceOk () {
@@ -749,6 +751,7 @@ export default {
         } else {
           this.$Message.error(response.data.message)
         }
+        this.makeInvoiceShow = true
       })
     },
     toExpenses () {
