@@ -731,6 +731,18 @@
               type: '近一天',
               showType: '折线',
               chart: null
+            },
+            {
+              title: '外网流入量',
+              type: '近一天',
+              showType: '折线',
+              chart: null
+            },
+            {
+              title: '外网流出量',
+              type: '近一天',
+              showType: '折线',
+              chart: null
             }
           ],
           currentData: this.getCurrentDate()
@@ -1436,9 +1448,13 @@
             let cpuBrokenLine = JSON.parse(JSON.stringify(line))
             let memoryBrokenLine = JSON.parse(JSON.stringify(line))
             let diskBrokenLine = JSON.parse(JSON.stringify(line))
+            let networkIn = JSON.parse(JSON.stringify(line))
+            let networkOut = JSON.parse(JSON.stringify(line))     
             cpuBrokenLine.xAxis.data = response.data.result.xaxis
             memoryBrokenLine.xAxis.data = response.data.result.xaxis
             diskBrokenLine.xAxis.data = response.data.result.xaxis
+            networkIn.xAxis.data = response.data.result.xaxis
+            networkOut.xAxis.data = response.data.result.xaxis
             cpuBrokenLine.series.push({
               name: 'CPU使用率（%）',
               type: 'line',
@@ -1460,6 +1476,20 @@
               barWidth: '15%'
             })
             this.tab2.monitoringList[2].chart = diskBrokenLine
+            networkIn.series.push({
+              name: '外网流入量（kb/s）',
+              type: 'line',
+              data: response.data.result.cpuUse,
+              barWidth: '15%'
+            })
+            this.tab2.monitoringList[3].chart = networkIn
+            networkOut.series.push({
+              name: '外网流出量（kb/s）',
+              type: 'line',
+              data: response.data.result.cpuUse,
+              barWidth: '15%'
+            })
+            this.tab2.monitoringList[4].chart = networkOut
           }
         })
       },
@@ -1476,8 +1506,8 @@
           if (res.data.status == 1) {
             let broken = this.tab2.monitoringList[index].type == 'line' ? JSON.parse(JSON.stringify(line)) : JSON.parse(JSON.stringify(bar))
             let type = this.tab2.monitoringList[index].showType == '折线' ? 'line' : 'bar'
-            let name = index == 0 ? 'CPU使用率（%）' : index == 1 ? '内存使用率（%）' : '磁盘使用率（%）'
-            let data = index == 0 ? res.data.result.cpuUse : index == 1 ? res.data.result.memoryUse : res.data.result.diskUse
+            let name = index == 0 ? 'CPU使用率（%）' : index == 1 ? '内存使用率（%）' : index == 2 ? '磁盘使用率（%）' : index == 3 ? '外网流入量':'外网流出量'
+            let data = index == 0 ? res.data.result.cpuUse : index == 1 ? res.data.result.memoryUse : index == 2 ? res.data.result.diskUse : index == 3 ? res.data.result.networkIn : res.data.result.networkOut
             broken.series.push({
               name: name,
               type: type,

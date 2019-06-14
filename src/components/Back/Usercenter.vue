@@ -44,13 +44,13 @@
                     <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
                     <li><span>账号密码</span><span>************</span><span @click="showModal.modifyPassword = true">修改</span></li>
                     <li v-if="(!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0) || (!authInfoPersion|| authInfoPersion&&authInfoPersion.authtype==0&&authInfoPersion.checkstatus!=0)"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
-                      @click="currentTab ='certification' ">马上认证</span></li>
+                      @click="paneStatus.usercenter ='certification' ">马上认证</span></li>
                     <li v-if="authInfoPersion&&authInfoPersion.authtype==0&&authInfoPersion.checkstatus==0"><span>身份证号</span><span>{{authInfoPersion.personalnumber?authInfoPersion.personalnumber.substr(0,4) + '****' + authInfoPersion.personalnumber.substring(authInfoPersion.personalnumber.length-4,authInfoPersion.personalnumber.length): ''}}</span></li>
                     <li v-if="authInfo&&authInfo.authtype==0"><span>认证信息</span><span style="color: #FF9339">未企业认证</span><span
-                      @click="currentTab ='companyInfo'">马上认证</span></li>
+                      @click="paneStatus.usercenter ='companyInfo'">马上认证</span></li>
                        <li v-if="authInfo&&authInfo.authtype==1&& authInfo.checkstatus == 2"><span>认证信息</span><span style="color: #FF9339">企业认证中</span></li>
                     <li v-if="authInfo&&authInfo.authtype==1&& authInfo.checkstatus == 1"><span>认证信息</span><span style="color: #FF9339">企业认证失败</span><span
-                      @click="currentTab ='companyInfo'">重新认证</span></li>
+                      @click="paneStatus.usercenter ='companyInfo'">重新认证</span></li>
                   </ul>
                 </div>
               </div>
@@ -1356,19 +1356,6 @@
 
   export default {
     data() {
-      var authType = sessionStorage.getItem('pane')
-      var currentTab = 'personalInfo'
-      if (authType == 'company') {
-        currentTab = 'companyInfo'
-      } else if (authType == 'person') {
-        currentTab = 'personalInfo'
-      } else if (authType == 'nonrealname') {
-        currentTab = 'certification'
-      } else {
-        currentTab = authType
-      }
-      sessionStorage.removeItem('pane')
-
       // 校验地区
       const validateArea = (rule, value, callback) => {
         if (
@@ -2625,6 +2612,18 @@
       }
     },
     created() {
+      let authType = sessionStorage.getItem('pane')
+      this.paneStatus.usercenter = 'personalInfo'
+      if (authType == 'company') {
+        this.paneStatus.usercenter = 'companyInfo'
+      } else if (authType == 'person') {
+        this.paneStatus.usercenter = 'personalInfo'
+      } else if (authType == 'nonrealname') {
+        this.paneStatus.usercenter = 'certification'
+      } else {
+        this.paneStatus.usercenter = authType
+      }
+      sessionStorage.removeItem('pane')
       if (this.paneStatus.usercenter == 'personalInfo' || this.paneStatus.usercenter == 'companyInfo'){
         this.showModal.selectAuthType = false
       } else {
@@ -3115,7 +3114,7 @@
                 window._agl && window._agl.push(['track', ['success', {t: 3}]])
                 // 获取用户信息
                 this.init()
-                this.currentTab = 'companyInfo'
+                this.paneStatus.usercenter = 'companyInfo'
               } else {
                 this.$message.info({
                   content: response.data.message
