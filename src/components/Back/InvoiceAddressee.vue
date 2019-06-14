@@ -467,7 +467,6 @@ export default {
           key: "age",
           render: (h, params) => {
             let color = params.row.status ? '#2A99F2' : '#999999'
-
             return h("div", [
               h(
                 "span",
@@ -541,10 +540,15 @@ export default {
                     })
                   }
                 }
-              },[h("span",{
+              },[h("Button",{
+                  props: {
+                    type: 'text',
+                    disabled:!params.row.status
+                  },
                   style: {
                     color: color,
-                    cursor: "pointer"
+                    padding:0,
+                    verticalAlign: 'baseline'
                   },
                 }, "设为默认")
               ])
@@ -651,8 +655,7 @@ export default {
       })
     },
     toExpenses () {
-      sessionStorage.setItem("expensesTab", "applyInvoice");
-      this.$router.push("expenses");
+      this.$router.push("expenses?tabs=applyInvoice");
     },
     receiptInfoAdd_open (name) {
       this.$refs[name].resetFields()

@@ -38,7 +38,10 @@
             </CheckboxGroup>
           </div>
           <li v-for="(item,index) in Results" :key="item.name">
-            <p>{{item.name}}
+            <p>
+              <Tooltip :content="item.name" placement="top">
+                    <span class="dname">{{item.name}}</span>
+                </Tooltip>
               <button v-show="item.isRes=='available'">未注册</button>
               <button v-show="item.isRes=='unavailable'" class="isRes">已注册</button>
               <span v-show="item.isRes=='available' && item.isRegister == 0">该域名暂不支持备案</span>
@@ -69,7 +72,7 @@
                         </div>
                         <div class="menu-item" v-else>
                             <span class="nodadta">
-                                <Spin v-show="showFix" size='small'>
+                                <Spin v-show="showFixP" size='small'>
                                     <Icon type="load-c" size=10 class="demo-spin-icon-load"></Icon>
                                     <div>努力加载中</div>
                                 </Spin>
@@ -164,6 +167,7 @@
         showButton: false,
         cancel: false,
         showFix: false,
+        showFixP: false,
       }
     },
     methods: {
@@ -205,13 +209,13 @@
       //展现更多Price
       getMore (name,index) {
         this.visible = index
-        this.showFix = true
+        this.showFixP = true
         this.yearList = []
         axios.post('domain/getDomainAllPrice.do', {
           domainName: name
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
-            this.showFix = false
+            this.showFixP = false
             this.yearList = res.data.data.results
           }
         })
@@ -541,25 +545,32 @@
           background: #F0F8FC;
         }
         P {
-          font-size: 16px;
-          color: rgba(51, 51, 51, 1);
+          display: flex;
+          align-items: center;
+          .dname {
+              font-size:16px;
+              font-weight:400;
+              color:rgba(51,51,51,1);
+              line-height:22px;
+              margin: 0;
+              width: 120px;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+          }
           button {
             outline: none;
             border: none;
+            font-weight:500;
+            line-height:17px;
             font-size: 12px;
             color: rgba(255, 255, 255, 1);
             background: rgba(102, 195, 0, 1);
             padding: 2px 7px;
-            margin-left: 20px;
+            margin-left: 10px;
           }
           .isRes {
             background: rgba(151, 151, 151, 1);
-            color: rgba(255, 255, 255, 1);
-            outline: none;
-            border: none;
-            font-size: 12px;
-            padding: 2px 7px;
-            margin-left: 20px;
           }
           span {
               font-size:14px;
@@ -574,12 +585,6 @@
           span {
             font-size: 20px;
             color: rgba(248, 94, 29, 1);
-
-            span {
-              font-size: 14px;
-              color: rgba(248, 94, 29, 1);
-
-            }
           }
           button {
             font-size: 16px;
@@ -589,7 +594,8 @@
             outline: none;
             border: none;
             cursor: pointer;
-            margin-left: 20px;
+            margin-left: 10px;
+            line-height: 22px;
 
           }
           .jiaru {
@@ -600,7 +606,7 @@
               color:rgba(178,178,178,1);
               line-height:22px;
               padding: 7px 27px;
-              margin-left: 20px;
+              margin-left: 10px;
           }
           a {
             font-size: 16px;
