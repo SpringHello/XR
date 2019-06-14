@@ -68,6 +68,7 @@ const GroupBooking = () =>import('@/components/App/groupbooking/homePage')
 const ProductShare = () =>import('@/components/App/groupbooking/sharePage')
 const GBActivity = () =>import('@/components/App/groupbooking/activityPage')
 const FrActive = () =>import('@/components/App/active/freeReceive')
+const FrActive1 = () =>import('@/components/App/active/freeReceive.1')
 
 const DBActive = () =>import('@/components/App/active/DatabaseActive')
 
@@ -339,6 +340,7 @@ var router = new Router({
         {path: 'activity/objectstorage', name: 'activity/objectstorage', component: objStorageActive},
         {path: 'smlj', name: 'smlj', component: smlj},
         {path: 'activity/free', name: 'activity/free', component: FrActive},
+        {path: 'activity/free1', name: 'activity/free1', component: FrActive1},
         {path: 'wonderfulDay',name: 'wonderfulDay', component:wonderfulDay},
 
         {path: 'activity/hotdatabase', name: 'activity/hotdatabase', component: DBActive},
