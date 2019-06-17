@@ -630,7 +630,7 @@ export default {
     },
     // 页面支付方法
     pay() {
-      if(this.orderState == 1){
+      if(this.orderState == 0){
       if (this.orderInfo.orderId == "") {
         this.$Message.info("请选择需要支付的订单");
         return;
