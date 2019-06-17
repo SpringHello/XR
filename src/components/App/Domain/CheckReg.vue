@@ -1,23 +1,5 @@
 <template>
   <div class="check">
-    <!--<div class="top">-->
-    <!--<div class="search">-->
-    <!--<div class="nav">-->
-    <!--<div>-->
-    <!--<Input v-model="doname" style="width: 550px;" size="large" placeholder="请输入您要查找的域名">-->
-    <!--<div slot="append" @click="choose=!choose" style="width: 80px;cursor:pointer">-->
-    <!--<span style="display: inline-block">{{append}}</span>-->
-    <!--</div>-->
-    <!--</Input>-->
-    <!--<div v-show="choose" class="change">-->
-    <!--<span v-for="(item,index) in choosend" :key="index"-->
-    <!--style="width:70px;display:inline-block;height: 20px" @click="append=item">{{item}}</span>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<button @click="">搜索</button>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
     <div class="content">
       <Spin v-show="showTemplate">
         <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
@@ -35,7 +17,7 @@
             <li>到期日期： <span>{{result.getDomain.expirationdate}}</span></li>
           </ul>
         </div>
-        <div class="desc">
+        <div class="desc" v-if="result.detailInfo">
           <p>详细英文注册信息如下：</p>
           <li v-for="(item,index) in result.detailInfo" :key="index">
             {{item}}

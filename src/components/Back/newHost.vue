@@ -516,7 +516,7 @@
         <div v-if="resetPasswordForm.hintGrade == 0">
           <div class="resetModal-import">
             <span>新密码</span>
-            <input v-model="resetPasswordForm.password"  @focus="resetPasswordForm.passwordHint = true" @blur="resetPasswordForm.passwordHint = false"  type="password" @input="verifyPassword" placeHolder="请输入新密码" ref="passwordInput"/>
+            <input v-model="resetPasswordForm.password" maxlength="32" @focus="resetPasswordForm.passwordHint = true" @blur="resetPasswordForm.passwordHint = false"  type="password" @input="verifyPassword" placeHolder="请输入新密码" ref="passwordInput"/>
             <img src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('passwordInput')"/>
             <div class="popTip" v-show="resetPasswordForm.passwordHint">
                   <div><i :class="{reach: resetPasswordForm.secondDegree }"></i>
@@ -525,17 +525,17 @@
                     <p>长度8~30位，推荐使用12位以上的密码</p></div>
                   <div><i :class="{reach: resetPasswordForm.thirdDegree }"></i>
                     <p>至少包含：小写字母，大写字母，数字</p></div>
-                  <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*</p></div>
+                  <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*_</p></div>
               </div>
           </div>
           <div class="resetModal-hint">
             <p v-show="resetPasswordForm.errorMsg=='passwordUndercapacity'">您输入的密码不符合格式要求</p>
-            <p v-show="resetPasswordForm.errorMsg=='passwordHint'">提醒：密码必须是8-30个包含数字和英文大小写的字符，可用特殊符号：~:,*</p>
+            <p v-show="resetPasswordForm.errorMsg=='passwordHint'">提醒：密码必须是8-30个包含数字和英文大小写的字符，可用特殊符号：~:,*_</p>
             <p v-show="resetPasswordForm.errorMsg=='passwordHintTwo'">注意：您的密码已经符合设置密码规则，但密码需要具备一定的强度，建议您设置12位以上，至少包括4项（~:,*）的特殊字符，每种字符大于等于2位</p>
           </div>
           <div class="resetModal-import">
             <span>确认密码</span>
-            <input type="password" v-model="resetPasswordForm.passwordAffirm" placeHolder="请确认新密码" ref="passwordInputAffirm"/>
+            <input type="password" maxlength="32" v-model="resetPasswordForm.passwordAffirm" placeHolder="请确认新密码" ref="passwordInputAffirm"/>
             <img src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('passwordInputAffirm')"/>
           </div>
           <div class="resetModal-hint">

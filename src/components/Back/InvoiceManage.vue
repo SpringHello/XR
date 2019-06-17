@@ -15,7 +15,7 @@
         </header>
         <div class="alert-warning">
           <p>1.您选择的增值税专票金额不能小于1000元，请累计之后一并申请。</p>
-          <p>2.开票时间为每月10-25日，在申请期限内的发票申请将在三个工作日内寄出，25号之后的发票申请将在下月10号以后寄出。</p>
+          <p>2.开票时间为每月10-20日，在申请期限内的发票申请将在当月20-25号内寄出，20号之后的发票申请将在下月20号以后寄出。</p>
         </div>
         <div class="invoice-money">
           <p>
@@ -218,11 +218,10 @@
                 >获取验证码</Button>
                 <Button disabled style="margin-left:10px;" v-else>{{count+'分'}}</Button>
               </FormItem>
-              <FormItem label="区域">
+              <FormItem label="区域" v-if="addresseeLength==0">
                 <Select
                   v-model="formInvoiceDate.province"
                   style="width:93px;"
-                  :disabled="addresseeLength!=0"
                   @on-change="changeProvince"
                 >
                   <Option v-for="item in area" :value="item.name" :key="item.name">{{item.name}}</Option>
@@ -230,7 +229,6 @@
                 <Select
                   v-model="formInvoiceDate.city"
                   style="width:93px;"
-                  :disabled="addresseeLength!=0"
                   @on-change="changeArea"
                 >
                   <Option v-for="item in areaList" :value="item.name" :key="item.name">{{item.name}}</Option>
@@ -238,10 +236,27 @@
                 <Select
                   v-model="formInvoiceDate.district"
                   style="width:93px;"
-                  :disabled="addresseeLength!=0"
                 >
                   <Option v-for="item in countyList" :value="item" :key="item">{{item}}</Option>
                 </Select>
+              </FormItem>
+              <!-- 三级联动赋值会出问题，所以有收件人不为空时，改用input赋值 -->
+              <FormItem label="区域" v-else>
+                <Input
+                  style="width:93px;"
+                  :disabled="true"
+                  v-model="formInvoiceDate.province"
+                ></Input>
+                <Input
+                  style="width:93px;"
+                  :disabled="true"
+                  v-model="formInvoiceDate.city"
+                ></Input>
+                <Input
+                  style="width:93px;"
+                  :disabled="true"
+                  v-model="formInvoiceDate.district"
+                ></Input>
               </FormItem>
               <FormItem label="详细地址" prop="address">
                 <Input
@@ -257,16 +272,14 @@
                 <Button
                   type="primary"
                   style="font-size: 12px;margin-left: 237px"
-                  v-if="this.normalInvoiceLength == 0 || this.addresseeLength == 0"
+                  v-if="(normalInvoiceLength == 0 || addresseeLength == 0)&&!makeInvoiceShow"
                   @click="invoiceInfoSave('formInvoiceDate')"
                 >下一步</Button>
-                <!-- <Button type="primary" style="font-size: 12px;margin-left: 237px" v-if=""
-                        @click="invoiceMake('formInvoiceDate')">确认开票
-                </Button>-->
                 <Button
+                  v-else
                   type="primary"
                   style="font-size: 12px;margin-left: 237px"
-                  v-else
+                  :disabled="!((formInvoiceDate.InvoiceType==1&&specialInvoiceStatus==0)||formInvoiceDate.InvoiceType==0)"
                   @click="invoiceMake('formInvoiceDate')"
                 >确认开票</Button>
               </Form-item>
@@ -428,6 +441,8 @@ export default {
       }
     }
     return {
+      // 不管保存收件人、发票信息失败或者成功，都跳转到确认开票
+      makeInvoiceShow: false,
       speacialInvoiceLength: 0,
       area: area,
       areaList: [],
@@ -713,8 +728,8 @@ export default {
           this.getAddresseeList()
         } else {
           this.$Message.error(response.data.message)
-          // this.addAddresseeResult = false
         }
+        this.makeInvoiceShow = true
       })
     },
     addInvoiceOk () {
@@ -736,11 +751,11 @@ export default {
         } else {
           this.$Message.error(response.data.message)
         }
+        this.makeInvoiceShow = true
       })
     },
     toExpenses () {
-      sessionStorage.setItem("expensesTab", "applyInvoice");
-      this.$router.push("expenses");
+      this.$router.push("expenses?tabs=applyInvoice");
     },
     affirmCertification (name) {
       this.$refs[name].validate((valid) => {
@@ -772,10 +787,6 @@ export default {
     },
     invoiceCertification () {
       this.applyChange = false
-    },
-    toExpenses () {
-      sessionStorage.setItem('expensesTab', 'applyInvoice')
-      this.$router.push('expenses')
     },
     // 切换省份
     changeProvince (val) {

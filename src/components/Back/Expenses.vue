@@ -18,6 +18,7 @@
               style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">费用中心</span>
         <Tabs v-model="paneStatus.expenses" type="card" :animated="false" @on-click="changecard"
               style="margin-top: 20px;min-height: 650px;padding-bottom:140px;">
+        <a href="https://www.xrcloud.net/support_docs/wzueJPw4o_x0LWYBjJu.html" style="position: absolute;right: 0;top: 6px;font-size: 14px;">查看费用中心更新详情</a>
           <Tab-pane label="财务总览" name="accountSummary">
             <div class="money">
               <div class="item1">
@@ -218,6 +219,11 @@
                   </ul>
                 </div>
               </div>
+              <div class="alert-warning" style="margin-top:20px;background:none;color:#666;border-color:#F5A623;font-size:12px;">
+                <p>为什么账单汇总金额与账单概览金额不一致？</p>
+                <p>费用中心更新之后，由于数据结构变更，6月12日之前的数据无法在新版费用中心的账单汇总中进行展示，导致您无法再【账单概览】页面中查询6月以前的账单，</p>
+                <p>若您需要查询6月以前的消费详情，可通过【费用】-【账单】-【流水详单】进行查看，流水详单中记录了您账号下自创建以来所有消费信息</p>
+              </div>
             </div>
             <!-- 资源详情 -->
             <div v-if="billBtnSelected==1">
@@ -335,9 +341,7 @@
               </p>
               <Table :columns="columns5" :data="data5" type="selection" @on-sort-change="SortField" @on-selection-change="select" @on-select="selectone" @on-select-cancel="selectonechange" @on-select-all="selectAllchange" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
               <div style="margin: 10px;">
-                <div style="float: right;overflow: hidden">
-                  <Page :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
-                </div>
+                <Page style="float: right;overflow: hidden" :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" :page-size="OrderSize" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
               </div>
             </div>
            
@@ -1105,7 +1109,7 @@
                 <Radio label="可用余额"></Radio>
             </RadioGroup>
           </p>
-          <p>仅判断可用余额与现金券余额之和与告警额度大小</p>
+          <p>仅判断可用余额额度与告警额度大小</p>
           <p>
             <span>告警额度</span>
             <InputNumber :max="999999999" :min="1" v-model="BalanceRepval" style="width: 300px"></InputNumber>
@@ -1319,7 +1323,10 @@
         CreatTimesort:'',
         PayTimesort:'',
         switchloading:false,
+        numorder:'',
         PreferentialOrder:'',
+        OrderSize:10,
+        orderall:[],
         // 账单-资源详情变量
         columnsResources: [
             {
@@ -3155,6 +3162,18 @@
           }
       }
     },
+    beforeRouteEnter(to, from, next) {
+      axios.get('user/GetUserInfo.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            $store.commit('setAuthInfo', {
+              authInfo: response.data.authInfo,
+              userInfo: response.data.result,
+              authInfoPersion: response.data.authInfo_persion
+            })
+          }
+        })
+        next()
+    },
     created() {
       this.getUserVipLevel()
         this.getBalance()
@@ -3169,21 +3188,16 @@
         this.getVipList()
         sessionStorage.removeItem('beVip')
       }
-      this.defaultTab()
+      this.defaultTabOther()
     },
     mounted() {
     },
     methods: {
-      // 默认选中tab
-      defaultTab() {
-        //orderManage(订单管理) accountSummary(财务总览) myCard(我的卡劵) applyInvoice(发票管理) bills(账单)
-        if(sessionStorage.getItem('expensesTab')){
-          let tab = sessionStorage.getItem('expensesTab')
-          this.paneStatus.expenses = tab
-          this.changecard()
-          sessionStorage.removeItem('expensesTab')
-        }
+      // 从其他项目(文档)跳转到费用中心，并且选中tab
+      defaultTabOther(){
+        this.paneStatus.expenses = this.$route.query.tabs
       },
+      // 切换到导出记录调用一下接口
       billChangeTabs(index) {
         if(index == 3) {
           this.getExportTable()
@@ -3379,6 +3393,9 @@
         this.searchCard()
       },
       chargeType(lable){
+       this.orderNumber=[]
+       this.AllMpneylength='0'
+       this.AllMpney='0.0'
         this.button5=lable
         this.getOrder()
         this.switchloading=true
@@ -3392,6 +3409,9 @@
         this.searchCard()
       },
       OrderchangePage(currentPage) {
+        this.orderNumber = []
+        this.AllMpneylength='0'
+        this.AllMpney='0.0'
         this.currentORderPage=currentPage
         this.getOrder()
       },
@@ -3419,6 +3439,13 @@
               this.switchloading=false
               this.data5=response.data.result.info
               this.OrderPages=response.data.result.count
+              var num=parseInt(response.data.result.pageSize)
+              this.OrderpageSize=num
+              this.Orderopts.forEach((item,index)=>{
+                if(item==num){
+                  this.OrderSize=num
+                }
+              })
             }
           })
       },
@@ -3485,6 +3512,7 @@
           this.paymentStatusValue='0'
           this.paneStatus.expenses='orderManage'
           this.changecard()
+          this.paymentStatusValue=''
         }
         else if(value=='myCard'){
           this.VoucherStatus=''
@@ -3558,7 +3586,7 @@
         this.$http.get('continue/showMoneyByMonth.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.billmonth = response.data.result
-            this.theCumulative = response.data.total_amount
+            this.theCumulative = response.data.result
             if(this.$store.state.userInfo.balanceAlarmStatus==1){
               this.BalanceAlarmSwitch=true
             }
@@ -3825,6 +3853,8 @@
            }}).then(res=>{
               if(res.data.status == 1){
                  if(res.data.result.isUseVoucher == 1){
+                   this.numorder=params.row.ordernumber
+                   this.orderall=params.row
                      this.payForm.cashCoupon = this.voucher > parseInt(this.payForm.paymentAmount) ? this.payForm.paymentAmount : this.voucher
                      this.payForm.cashCouponBalance = this.voucher > parseInt(this.payForm.paymentAmount) ? (this.voucher - this.payForm.paymentAmount).toFixed(2) : 0
                   } else{
@@ -3873,9 +3903,32 @@
       },
       payOk() {
         let order = ''
-        this.orderNumber.forEach(item => {
-          order += ',' + item.ordernumber
-        })
+        if(this.orderNumber==null||this.orderNumber==''||this.orderNumber==[]){
+          order=this.numorder
+         var paramsA = {
+              order: order,
+              ticket: this.operatorid
+            }
+           var paramsT ={ 
+              order: order,
+              ticket: this.operatorid,
+              money: (this.payForm.paymentAmount - this.voucher).toFixed(2)
+            }
+        }
+        else{
+          this.orderNumber.forEach(item => {
+            order += ',' + item.ordernumber
+          })
+         var paramsA = {
+              order: order.substr(1),
+              ticket: this.operatorid
+            }
+            var paramsT ={ 
+              order: order.substr(1),
+              ticket: this.operatorid,
+              money: (this.payForm.paymentAmount - this.voucher).toFixed(2)
+            }
+        }
         let orderStatus = ''
         this.orderNumber.forEach(item=>{
           orderStatus += JSON.parse(item.display)['类型']
@@ -3883,10 +3936,7 @@
         sessionStorage.setItem('orderStatus', orderStatus)
         if (this.voucher > parseInt(this.payForm.paymentAmount)) {
           axios.get('information/payOrder.do', {
-            params: {
-              order: order.substr(1),
-              ticket: this.operatorid
-            }
+            params: paramsA
           }).then(res => {
             if (res.status == 200 && res.data.status == 1) {
               window._agl && window._agl.push(['track', ['success', {t: 3}]])
@@ -3906,20 +3956,27 @@
           })
         } else {
           this.$http.get('information/zfconfirm.do', {
-            params: {
-              order: order.substr(1),
-              ticket: this.operatorid,
-              money: (this.payForm.paymentAmount - this.voucher).toFixed(2)
-            }
+            params: paramsT
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              let overtime = new Date(this.orderNumber[0].overTime).getTime()
-              this.orderNumber.forEach(item => {
-                let overTime = new Date(item.overTime).getTime()
-                if (overTime < overtime) {
-                  overtime = overTime
-                }
-              })
+              if(this.orderNumber==null||this.orderNumber==''||this.orderNumber==[]){
+                var overtime = new Date(this.orderall.overTime).getTime()
+                // this.orderall.forEach(item => {
+                //   let overTime = new Date(item.overTime).getTime()
+                //   if (overTime < overtime) {
+                //     overtime = overTime
+                //   }
+                // })
+              }
+              else{
+                var overtime = new Date(this.orderNumber[0].overTime).getTime()
+                this.orderNumber.forEach(item => {
+                  var overTime = new Date(item.overTime).getTime()
+                  if (overTime < overtime) {
+                    overtime = overTime
+                  }
+                })
+              }
               sessionStorage.setItem('overtime', this.toStr(overtime))
               sessionStorage.setItem('payInfo', JSON.stringify(response.data.result))
               this.$router.push({
@@ -3963,6 +4020,9 @@
       selectone(selection,row){
         this.data5.forEach((item,index) => {
           if(row.complexorderbatch&&row.complexorderbatch==item.complexorderbatch){
+            item._checked=true
+            this.data5.splice(index, 1, item)
+          } else if(!row.complexorderbatch&&row.ordernumber==item.ordernumber){
             item._checked=true
             this.data5.splice(index, 1, item)
           }
@@ -4901,7 +4961,7 @@
       }
       ,
       refundDisabled() {
-        if (this.orderNumber.some(checkReturnMoneyFlag) || this.orderNumber.length === 0) {
+        if (this.orderNumber.some(checkReturnMoneyFlag) ||this.orderNumber.length === 0) {
           return true
         } else {
           return false

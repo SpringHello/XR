@@ -47,6 +47,7 @@ export default {
   },
   yAxis: {
     type: 'value',
+    min: 100,
     splitLine: {
       show: false
     },

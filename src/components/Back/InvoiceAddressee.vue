@@ -87,13 +87,13 @@
             <Button disabled style="margin-left:10px;" v-else>{{count+'分'}}</Button>
           </FormItem>
           <FormItem label="区域">
-            <Select v-model="formReceipt.province" style="width:93px;" @on-change="changeProvince">
+            <Select v-model="formReceipt.province" style="width:93px;" :placeholder="provinceCover" @on-change="changeProvince">
               <Option v-for="item in area" :value="item.name" :key="item.name">{{item.name}}</Option>
             </Select>
-            <Select v-model="formReceipt.city" style="width:93px;" @on-change="changeArea">
+            <Select v-model="formReceipt.city" style="width:93px;" :placeholder="cityCover" @on-change="changeArea">
               <Option v-for="item in areaList" :value="item.name" :key="item.name">{{item.name}}</Option>
             </Select>
-            <Select v-model="formReceipt.district" style="width:93px;">
+            <Select v-model="formReceipt.district" :placeholder="districtCover" style="width:93px;">
               <Option v-for="item in countyList" :value="item" :key="item">{{item}}</Option>
             </Select>
           </FormItem>
@@ -439,6 +439,9 @@ export default {
       ],
       invoiceList: [
       ],
+      provinceCover: '',
+      cityCover: '',
+      districtCover: '',
       columnsAddressee: [
         {
           title: "收件人",
@@ -464,7 +467,6 @@ export default {
           key: "age",
           render: (h, params) => {
             let color = params.row.status ? '#2A99F2' : '#999999'
-
             return h("div", [
               h(
                 "span",
@@ -478,6 +480,12 @@ export default {
                     click: () => {
                       this.$refs['formReceipt'].resetFields();
                       this.formReceipt = JSON.parse(JSON.stringify(params.row));
+                      this.formReceipt.province = ''
+                      this.formReceipt.city = ''
+                      this.formReceipt.district = ''
+                      this.provinceCover = params.row.province
+                      this.cityCover = params.row.city
+                      this.districtCover = params.row.district
                       this.formReceipt.code = '';
                       this.addresseeTitleModal = '修改';
                       this.showModal.receiptInfoAdd = true;
@@ -532,10 +540,15 @@ export default {
                     })
                   }
                 }
-              },[h("span",{
+              },[h("Button",{
+                  props: {
+                    type: 'text',
+                    disabled:!params.row.status
+                  },
                   style: {
                     color: color,
-                    cursor: "pointer"
+                    padding:0,
+                    verticalAlign: 'baseline'
                   },
                 }, "设为默认")
               ])
@@ -642,13 +655,14 @@ export default {
       })
     },
     toExpenses () {
-      sessionStorage.setItem("expensesTab", "applyInvoice");
-      this.$router.push("expenses");
+      this.$router.push("expenses?tabs=applyInvoice");
     },
     receiptInfoAdd_open (name) {
       this.$refs[name].resetFields()
       this.addresseeTitleModal = '新增'
-      // this.formReceipt = {}
+      this.formReceipt.province = '北京市'
+      this.changeProvince('北京市')
+      this.changeArea('北京市')
       this.showModal.receiptInfoAdd = true
     },
     invoiceInfoAdd_open (name) {
@@ -736,9 +750,9 @@ export default {
           let params = {
             recipient: this.formReceipt.recipient,
             phone: this.formReceipt.phone,
-            province: this.formReceipt.province,
-            city: this.formReceipt.city,
-            district: this.formReceipt.district,
+            province: this.formReceipt.province?this.formReceipt.province:this.provinceCover,
+            city: this.formReceipt.city?this.formReceipt.city:this.cityCover,
+            district: this.formReceipt.district?this.formReceipt.district:this.districtCover,
             address: this.formReceipt.address,
             smsCode: this.formReceipt.code
           }
@@ -803,7 +817,13 @@ export default {
           }
           axios.post(url, params).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$Message.success(`${this.addresseeTitleModal}收件开票成功`)
+              if(type==1) {
+                this.$message.confirm({
+                  content: '您的增值税专用发票信息提交成功，我们将在一个工作日内对您的信息进行审核，请耐心等待。',
+                })
+              } else {
+                this.$Message.success(`${this.addresseeTitleModal}开票成功`)
+              }
               this.showModal.invoiceInfo = false
               this.getInvoiceList()
             } else {

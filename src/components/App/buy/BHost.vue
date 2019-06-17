@@ -511,7 +511,7 @@
                     <p>长度8~30位，推荐使用12位以上的密码</p></div>
                   <div><i :class="{reach: passwordForm.thirdDegree}"></i>
                     <p>至少包含：小写字母，大写字母，数字</p></div>
-                  <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*</p></div>
+                  <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*_</p></div>
               </div>
             </div>
           </div>
@@ -781,7 +781,7 @@
         RAMList: [],
         // 自定义主机配置
         vmConfig: {
-          diskType: 'sas',
+          diskType: 'ssd',
           kernel: 1,
           RAM: 1,
           diskSize: 40,
@@ -1084,7 +1084,7 @@
       },
       // 加入预算清单
       addCart() {
-           if (this.zone.buyover == 1) {
+        if (this.zone.buyover == 1) {
           this.$Message.info({
             content: '请选择需要购买的区域'
           })
@@ -1151,12 +1151,18 @@
           this.roll(100)
           return
         }
-        if (this.createType != 'fast' && ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'app' && this.appSystem.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined))) {
+        if (this.createType != 'fast' && ((this.currentType == 'public' && !this.system.systemName) || (this.currentType == 'app' && !this.appSystem.systemName) || (this.currentType == 'custom' && !this.customMirror.systemtemplateid))) {
           // this.$message.info({
           //   content: '请选择一个镜像系统'
           // })
           this.roll(500)
           this.mirrorShow = true
+          return
+        }
+        if(this.createType == 'fast' && !this.selectFastMirror){
+          this.$message.info({
+            content: '请选择一个镜像系统'
+          })
           return
         }
         if (this.currentLoginType == 'custom') {

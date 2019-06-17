@@ -419,7 +419,7 @@
     if(value == ''){
       return callback(new Error('请输入镜像名称'));
     }else if(!reg.test(value)){
-      return callback(new Error('请输入6-23位包含大小写与数字的密码,可用特殊符号：~:,*'));
+      return callback(new Error('请输入6-23位包含大小写与数字的密码,可用特殊符号：~:,*_'));
     }else {
       callback();
     }

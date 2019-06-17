@@ -43,10 +43,11 @@ export default {
       textStyle: {
         color: 'rgba(17,17,17,0.65)'
       }
-    }
+    },
   },
   yAxis: {
     type: 'value',
+    min: 100,
     splitLine: {
       show: false
     },

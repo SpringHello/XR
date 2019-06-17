@@ -42,7 +42,7 @@ Vue.config.productionTip = false
 
 
 
-axios.defaults.withCredentials = true
+//axios.defaults.withCredentials = true
 
 //axios.defaults.baseURL = 'https://kaifa.xrcloud.net/'
 axios.defaults.baseURL = 'https://zschj.xrcloud.net/'
@@ -94,8 +94,10 @@ function appendMD5(params, type) {
   }
   var str = '', count = 0;
   for (let i in params) {
-      str += i.substr(0, 1) + params[i]
-    count++
+      if (typeof(params[i]) !== "undefined"){
+        str += i.substr(0, 1) + params[i]
+        count++
+      }
   }
   str += count
   if (str !== '') {
