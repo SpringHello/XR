@@ -234,15 +234,15 @@
       },
       queryObjPrice: debounce(500, function () {
         var params = {
-          flowPackage: this.save,
-          capacity: this.downLoad,
+          flowPackage: this.downLoad,
+          capacity: this.save,
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value
         }
         if (this.group.length == 1 && this.group[0] == '存储包' ) {
-          params.capacity = ''
-        } else if(this.group.length == 1 && this.group[0] == '下行流量包'){
           params.flowPackage = ''
+        } else if(this.group.length == 1 && this.group[0] == '下行流量包'){
+          params.capacity = ''
         } else if(this.group.length == 0){
           params.capacity = ''
           params.flowPackage = ''
