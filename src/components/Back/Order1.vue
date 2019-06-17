@@ -64,8 +64,8 @@
         </div>
         <div style="text-align:right;margin-top:40px;">
           <Button @click="deleteOrder" style="margin-right:10px;">取消订单</Button>
-          <Button type="primary" @click="payCash" v-if="isButtonCash">确认购买</Button>
-          <Button type="primary" @click="pay" v-else>提交订单</Button>
+          <Button type="primary" @click="payCash" v-if="isButtonCash" :disabled="orderState == 0?false:true">确认购买</Button>
+          <Button type="primary" @click="pay" v-else :disabled="orderState == 0?false:true">提交订单</Button>
         </div>
 
         <div style="clear: both"></div>
@@ -365,6 +365,10 @@ export default {
         total: 0,
         selection: 0
       },
+
+      // 订单状态
+      orderState:0,
+
       // 订单类型
       goodType: null,
       // 接收是否购买数据盘
@@ -469,6 +473,7 @@ export default {
             data.discountmessage = "";
           }
           if (data["订单状态"]) {
+            this.orderState == data["订单状态"];
             this.couponInfo.originCost +=
               data["订单状态"] == 1 ? 0 : Number(item.originalcost.toFixed(2));
             this.couponInfo.cost +=
@@ -625,6 +630,7 @@ export default {
     },
     // 页面支付方法
     pay() {
+      if(this.orderState == 1){
       if (this.orderInfo.orderId == "") {
         this.$Message.info("请选择需要支付的订单");
         return;
@@ -657,6 +663,7 @@ export default {
             });
           }
         });
+        }
     },
     // 兑换优惠券
     exchange() {
@@ -728,6 +735,7 @@ export default {
 
     // 现金券余额充足支付
     payCash() {
+      if(this.orderState == 0){
       if (this.selectLength.selection == 0) {
         this.$Modal.info({
           content: "请先选择一个订单"
@@ -760,6 +768,7 @@ export default {
             sessionStorage.setItem("errMsg", res.data.message);
           }
         });
+    }
     }
   },
   computed: {
