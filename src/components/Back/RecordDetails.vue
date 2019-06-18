@@ -1054,64 +1054,7 @@
       </div>
     </Modal>
 
-    <!-- 网站信息修改 -->
-    <Modal
-      v-model="website"
-      :scrollable="true"
-    >
-    <div slot='header' class="modal-header-border">
-      <span class='universal-modal-title'>网站基本信息</span>
-    </div>
-      <Form ref="website" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
-        <FormItem prop="webdomian">
-          <p style="margin:10px">网站域名</p>
-          <Input type="text" v-model="updateHostUnitList.webdomian"></Input>
-        </FormItem>
-        <FormItem prop="weburl">
-          <p style="margin:10px">网站首页URL</p>
-          <Input type="text" v-model="updateHostUnitList.weburl"></Input>
-        </FormItem>
-        <FormItem prop="icprecordpassword">
-          <p style="margin:10px">ICP备案密码</p>
-          <Input type="text" v-model="updateHostUnitList.icprecordpassword"></Input>
-        </FormItem>
-        <FormItem prop="webname">
-          <p style="margin:10px">主体备案号</p>
-          <Input type="text" v-model="updateHostUnitList.webname"></Input>
-        </FormItem>
-      </Form>
-      <div slot="footer">
-        <Button @click="website = false">取消</Button>
-        <Button type="primary" @click="hostUpdate('website')">确定</Button>
-      </div>
-    </Modal>
-
-    <Modal
-      v-model="website"
-      :scrollable="true"
-    >
-    <div slot='header' class="modal-header-border">
-      <span class='universal-modal-title'>网站基本信息</span>
-    </div>
-      <Form ref="website" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
-        <FormItem prop="webdomian">
-          <p style="margin:10px">网站域名</p>
-          <Input type="text" v-model="updateHostUnitList.webdomian"></Input>
-        </FormItem>
-        <FormItem prop="weburl">
-          <p style="margin:10px">ICP备案密码</p>
-          <Input type="text" v-model="updateHostUnitList.weburl"></Input>
-        </FormItem>
-        <FormItem prop="webname">
-          <p style="margin:10px">主体备案号</p>
-          <Input type="text" v-model="updateHostUnitList.webname"></Input>
-        </FormItem>
-      </Form>
-      <div slot="footer">
-        <Button @click="website = false">取消</Button>
-        <Button type="primary" @click="hostUpdate('website')">确定</Button>
-      </div>
-    </Modal>
+   
   </div>
 </template>
 
@@ -1975,7 +1918,7 @@ export default {
       }
     },
     webRecordBeforeUpload() {
-      if (this.webRecordData.length > 0) {
+      if (this.webRecordData.length > 1) {
         this.$Message.info("网站核验单最多只能上传一张");
         return false;
       }
