@@ -41,7 +41,7 @@
               confirm
               width="230"
               placement="right"
-              @on-ok="delBefore"
+              @on-ok="deleteHost"
               title="您确认删除选中的主机吗？">
               <Button type="primary" :disabled="deleteDisabled">删除</Button>
             </Poptip>
@@ -53,7 +53,15 @@
               <DropdownMenu slot="list">
                   <DropdownItem name="resetPassword" :disabled="resetPasswordDisabled">重置密码</DropdownItem>
                   <DropdownItem name="bindingIP" :disabled="bindingIPDisabled">绑定IP</DropdownItem>
-                  <Dropdown-item name="unbindIP" :disabled="unbindIPDisabled">解绑公网IP</Dropdown-item>
+                    <Poptip
+                      confirm
+                      width="200"
+                      placement="right"
+                      title="您确认解绑主机IP吗？"
+                      @on-ok="unbind"
+                      style="display: block">
+                      <Dropdown-item name="unbindIP" :disabled="unbindIPDisabled">解绑公网IP</Dropdown-item>
+                    </Poptip>
                   <DropdownItem name="rename" :disabled="renameDisabled">重命名</DropdownItem>
                   <DropdownItem name="ratesChange" :disabled="ratesChangeDisabled">
                     <Tooltip content="资费变更只适用于实时计费的资源" placement="top">资费变更
@@ -370,6 +378,8 @@
         </Button>
       </div>
     </Modal>
+
+
      <!-- 进入GPU服务器区域 -->
    <Modal v-model="showModal.enterGPU" :scrollable="true" :closable="false" :width="390">
       <p slot="header" class="modal-header-border">
@@ -868,7 +878,7 @@
                   ]);
                 break;
                 case 1:
-                  if (params.row.computerstate == 1 && params.row.status == 1) {
+                  if (params.row.computerstate == 1) {
                     return h('div',{
                       style:{
                         display:'flex',
@@ -1097,7 +1107,9 @@
               title:'IP地址',
               render:(h,params)=>{
                 return h('div',[
-                  h('p',{},params.row.publicip ?params.row.publicip+'(公)':'----'),
+                  h('p',{ style:{
+                    marginBottom:'5px'
+                  }},params.row.publicip ?params.row.publicip+'(公)':'----'),
                   h('p',{},params.row.privateip ?params.row.privateip+'(内)':'----')
                 ])
               }
@@ -1188,7 +1200,7 @@
                       on: {
                         click: () => {
                           this.deleteList = params.row;
-                          this.delBefore(params.row._index);
+                          this.deleteHost(params.row._index);
                         }
                       }
                     }, '删除')])
@@ -1213,7 +1225,7 @@
                       on: {
                         click: () => {
                           this.deleteList = params.row;
-                          this.delBefore(params.row._index);
+                          this.deleteHost(params.row._index);
                         }
                       }
                     }, '删除')])
@@ -1289,7 +1301,7 @@
                                   title:'解绑IP',
                                   content:'是否解绑该GPU的IP?',
                                   onOk:()=>{
-                                    this.unbind(params.row.publicip,params.row.computerid);
+                                    this.unbind();
                                   }
                                 })
                                 this.uuId = params.row.computerid;
@@ -1369,7 +1381,7 @@
                                 this.$Message.info('请等待主机完成当前操作');
                               }else {
                                 this.deleteList = params.row;
-                                this.delBefore(params.row._index);
+                                this.deleteHost(params.row._index);
                               }
                             }
                           }
@@ -1564,24 +1576,22 @@
         },
 
         //解绑IP
-        unbind(publicip,computerid) {
-         if(publicip != ''){
-           this.$Message.info({
-             content: `<span style="color:#2A99F2">${this.companyname}</span>GPU云服务器,正在解绑公网IP`
-           })
-         }
+        unbind() {
             this.$http.get('network/disableStaticNat.do', {
               params: {
-                ipId:publicip,
-                VMId:computerid
+                ipId: this.selectLength[0].publicip,
+                VMId:this.selectLength[0].computerid
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.info({
+                    content: `<span style="color:#2A99F2">${this.companyname}</span>GPU云服务器,正在解绑公网IP`
+                  })
                  this.timingRefesh(this.hostSelectList.id);
               } else if (response.status == 200 && response.data.status == 2) {
-                // this.$message.info({
-                //   content: response.data.message
-                // })
+                this.$message.info({
+                  content: response.data.message
+                })
               }
             })
         },
@@ -1672,27 +1682,6 @@
          })
         },
       delBefore(index){
-        this.$http.get('information/delVMHint.do',{
-          params:{
-            type:3,
-            computerId:this.uuId,
-          }
-        }).then(res => {
-          if(res.status == 200 && res.data.status == 1){
-            this.deleteHost(index);
-          }else{
-            this.delHostMessage = res.data.message
-            this.showModal.delHostHint = true
-          }
-        })
-      },
-      //删除主机
-       deleteHost(index){
-          if(this.deleteList ==""){
-             this.selectLength.forEach(item =>{
-              this.deleteId += item.id+','
-            })
-          }
           if (this.hostDelWay === 1) {
           this.hostData.forEach(host => {
             this.selectHostIds.forEach(item => {
@@ -1710,6 +1699,14 @@
             }
           })
         }
+      },
+      //删除主机
+       deleteHost(index){
+            if(this.deleteList ==""){
+             this.selectLength.forEach(item =>{
+              this.deleteId += item.id+','
+            })
+          }
          this.$Modal.confirm({
            content:`主机删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
            onOk:()=>{
@@ -1720,6 +1717,7 @@
              }).then(res => {
                if(res.status == 200 && res.data.status == 1){
                  this.$Message.success(res.data.message);
+                 this.delBefore();
                  if(index == undefined){
                     this.timingRefesh(this.selectHostIds+'');
                   }else{
@@ -2239,7 +2237,7 @@
               break
             case 'unbindIP':
               if (this.selectLength[0].publicip) {
-                 this.unbind(this.selectLength[0].publicip,this.selectLength[0].computerid);
+                 this.unbind();
               } else {
                 this.$Message.warning('该主机没有绑定公网IP')
               }
