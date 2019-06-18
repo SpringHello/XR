@@ -335,7 +335,7 @@
     name: 'back',
     data() {
       const validPhoneNumber = (rule, value, callback) => {
-        let reg = /^1[3|5|7|8|9|6|7]\d{9}$/;
+        let reg = /^1[3|4|5|7|8|9|6|7]\d{9}$/;
         if (!reg.test(this.complaintForm.phone)) {
           return callback(new Error("请输入正确的手机号码"));
         } else {
