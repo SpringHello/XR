@@ -1577,6 +1577,12 @@
 
         //解绑IP
         unbind() {
+           this.hostData.forEach(host => {
+            if (host.id == this.hostSelectList.id) {
+              host.bindip = 1
+              host._disabled = true
+            }
+          })
             this.$http.get('network/disableStaticNat.do', {
               params: {
                 ipId: this.selectLength[0].publicip,
@@ -1762,7 +1768,7 @@
               zoneId:this.$store.state.zone.zoneid
             }
           }).then(res => {
-            if(res.status == 200 && res.data.status == 1){
+            if(res.status == 200){
               this.$Message.success(res.data.message);
               if(index == undefined){
                   this.timingRefesh(this.selectHostIds+'');
@@ -1770,9 +1776,6 @@
                   this.timingRefesh(this.hostSelectList.id);
                 }
             }else {
-              this.$message.info({
-                content: res.data.message
-              })
               this.getGpuServerList();
             }
           })

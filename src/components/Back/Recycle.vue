@@ -198,6 +198,9 @@
                 case 'nat':
                   nat.push(item)
                   break;
+                case 'gpu':
+                  host.push(item)
+                  break;
               }
             })
             this.allList = response.data.result
